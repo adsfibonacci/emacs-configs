@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: formats-environment
+# key: \format
+# --
+\format{align*} {
+	$1
+} $0

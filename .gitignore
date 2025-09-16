@@ -1,0 +1,13 @@
+*.desktop
+*.desktop.lock
+session*
+.el*
+.backups/
+auto-save-list/
+.cache/
+.dap-breakpoints
+eln-cache/
+*.bak
+.lsp-session-v1
+.org-id-locations
+tramp

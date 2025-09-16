@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: figures
+# key: \fig
+# --
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=$2]{$1}
+	$0
+\end{figure}

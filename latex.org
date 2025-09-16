@@ -1,0 +1,60 @@
+#+author: Alexander Speigle
+#+date: \today
+#+latex_class_options: [a4, 12pt]
+#+latex_header: \usepackage{subfiles}
+#+latex_header: \usepackage{subcaption}
+#+latex_header: \usepackage{amsmath}
+#+latex_header: \usepackage{amssymb}
+#+latex_header: \usepackage{amsthm}
+#+latex_header: \usepackage{bbm}
+#+latex_header: \usepackage{graphicx}
+#+latex_header: \usepackage{fancyvrb}
+#+latex_header: \usepackage{xparse}
+#+latex_header: \usepackage{parskip}
+#+latex_header: \usepackage{stmaryrd}
+#+latex_header: \usepackage{cjhebrew}
+#+latex_header: \usepackage{derivative}
+#+latex_header: \usepackage{mathtools}
+#+latex_header: \usepackage{esint}
+
+#+latex_header: \usepackage{xcolor}
+#+latex_header: \usepackage{minted}
+#+latex_header: \usepackage{verbatim}
+
+#+latex_header: \definecolor{bg}{rgb}{.9,.9,.9}
+#+latex_header: \usepackage[backgroundcolor=bg, skipbelow=10, skipabove=10]{mdframed}
+
+#+latex_header: \usemintedstyle{emacs}
+#+latex_header: \surroundwithmdframed{minted}
+#+latex_header: \surroundwithmdframed{verbatim}
+
+#+latex_header: \usepackage[margin=2cm]{geometry}
+#+latex_header: \usepackage[shortlabels]{enumitem}
+
+#+latex_header: \newcommand{\aaa}{\text{*}}
+#+latex_header: \newcommand{\bC}{\mathbb{C}}
+#+latex_header: \newcommand{\bR}{\mathbb{R}}
+#+latex_header: \newcommand{\bQ}{\mathbb{Q}}
+#+latex_header: \newcommand{\bZ}{\mathbb{Z}}
+#+latex_header: \newcommand{\bN}{\mathbb{N}}
+#+latex_header: \newcommand{\bD}{\mathbb{D}}
+#+latex_header: \newcommand{\bP}{\mathbb{P}}
+#+latex_header: \newcommand{\bE}{\mathbb{E}}
+
+#+latex_header: \newcommand{\cA}{\mathcal{A}}
+#+latex_header: \newcommand{\cB}{\mathcal{B}}
+#+latex_header: \newcommand{\cC}{\mathcal{C}}
+#+latex_header: \newcommand{\cD}{\mathcal{D}}
+#+latex_header: \newcommand{\cE}{\mathcal{E}}
+#+latex_header: \newcommand{\cR}{\mathcal{R}}
+#+latex_header: \newcommand{\cQ}{\mathcal{Q}}
+#+latex_header: \newcommand{\cZ}{\mathcal{Z}}
+#+latex_header: \newcommand{\cN}{\mathcal{N}}
+#+latex_header: \newcommand{\cP}{\mathcal{P}}
+#+latex_header: \newcommand{\cL}{\mathcal{L}}
+#+latex_header: \newcommand{\cF}{\mathcal{F}}
+#+latex_header: \newcommand{\cM}{\mathcal{M}}
+
+#+latex_header: \newcommand{\dd}{\, \mathrm{d}}
+#+latex_header: \newcommand{\nrm}[1]{\Vert #1 \Vert}
+
