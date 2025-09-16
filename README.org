@@ -1,3 +1,5 @@
 Config files and most packages used in my emacs setup. 
+
 Should have minimal installation commands on new devices. 
+
 Not perfect so some devices might require more intervention. 
