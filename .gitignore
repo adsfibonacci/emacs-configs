@@ -1,7 +1,6 @@
 *.desktop
 *.desktop.lock
 session*
-.el*
 .backups/
 auto-save-list/
 .cache/
@@ -11,3 +10,5 @@ eln-cache/
 .lsp-session-v1
 .org-id-locations
 tramp
+.extensions/
+*.el~
