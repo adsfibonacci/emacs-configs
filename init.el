@@ -10,6 +10,7 @@
 (server-start)
 
 ;;(require 'ox-latex)
+(require 'magit)
 (require 'org)
 (with-eval-after-load 'org
   ;; Ensure org-preview-latex-process-alist is defined
