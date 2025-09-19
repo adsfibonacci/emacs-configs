@@ -9,6 +9,11 @@
 (setq debug-on-error t)
 (server-start)
 
+;; (add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+
+
 ;;(require 'ox-latex)
 (require 'magit)
 (require 'org)
