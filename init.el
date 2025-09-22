@@ -8,9 +8,29 @@
 
 (setq debug-on-error t)
 (server-start)
+(setq image-auto-resize nil) ; if you have such a package
+;; Automatically revert all buffers when the underlying file changes
+(global-auto-revert-mode 1)
+
+;; Include remote (TRAMP) files
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)  ;; optional, quiets messages
+(add-hook 'image-mode-hook #'auto-revert-mode)
+
+
 
 ;; (add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(defun set-frame-opacity (alpha)
+  "Set the current frame's transparency to ALPHA (1-100)."
+  (interactive "nEnter opacity (1-100): ")
+  (when (or (< alpha 1) (> alpha 100))
+    (user-error "Opacity must be between 1 and 100"))
+  (set-frame-parameter nil 'alpha alpha)
+  (message "Frame opacity set to %d%%" alpha))
+
+;; Bind to F9
+(global-set-key (kbd "<f9>") 'set-frame-opacity)
 
 
 
