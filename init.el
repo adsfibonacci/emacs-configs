@@ -17,8 +17,6 @@
 (setq auto-revert-verbose nil)  ;; optional, quiets messages
 (add-hook 'image-mode-hook #'auto-revert-mode)
 
-
-
 ;; (add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (defun set-frame-opacity (alpha)
@@ -74,6 +72,7 @@
 (require 'ob)
 (require 'ob-python)
 (require 'ob-R)
+(require 'ob-julia)
 (require 'ess-site)
 
 (setq org-latex-listings 'minted)
@@ -181,8 +180,7 @@
  '(elcord-quiet t)
  '(elcord-refresh-rate 10)
  '(org-babel-load-languages
-   '((emacs-lisp . t) (C . t) (R . t) (python . t) (latex . t)
-     (shell . t)))
+   '((emacs-lisp . t) (C . t) (R . t) (python . t) (latex . t) (shell . t) (julia . t )))
  '(package-selected-packages
    '(## atom-one-dark-theme auctex dap-mode elcord ess linum-off
 	lsp-latex lsp-ui magit neotree org-modern pdf-tools pyvenv
