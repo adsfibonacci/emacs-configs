@@ -12,13 +12,17 @@
 ;; Automatically revert all buffers when the underlying file changes
 (global-auto-revert-mode 1)
 
+(add-to-list 'default-frame-alist '(foreground-color . "#FFFFFF"))
+(add-to-list 'default-frame-alist '(background-color . "#000000"))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 ;; Include remote (TRAMP) files
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)  ;; optional, quiets messages
 (add-hook 'image-mode-hook #'auto-revert-mode)
 
 ;; (add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 (defun set-frame-opacity (alpha)
   "Set the current frame's transparency to ALPHA (1-100)."
   (interactive "nEnter opacity (1-100): ")
@@ -83,7 +87,7 @@
         ("frame" "single")))
 	  
 ;; Appearance and functionality
-(load-theme 'atom-one-dark t)
+;; (load-theme 'atom-one-dark t)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -182,9 +186,9 @@
  '(org-babel-load-languages
    '((emacs-lisp . t) (C . t) (R . t) (python . t) (latex . t) (shell . t) (julia . t )))
  '(package-selected-packages
-   '(## atom-one-dark-theme auctex dap-mode elcord ess linum-off
+   '(## auctex dap-mode elcord ess linum-off
 	lsp-latex lsp-ui magit neotree org-modern pdf-tools pyvenv
-	rust-mode treemacs-all-the-icons yasnippet))
+	rust-mode treemacs-all-the-icons yasnippet)) ;;atom-one-dark-theme 
  '(warning-suppress-types '((ox-latex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
