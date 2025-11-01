@@ -7,7 +7,6 @@
 (package-initialize)
 
 (setq debug-on-error t)
-(server-start)
 (setq image-auto-resize nil) ; if you have such a package
 ;; Automatically revert all buffers when the underlying file changes
 (global-auto-revert-mode 1)
