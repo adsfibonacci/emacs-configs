@@ -153,6 +153,12 @@
 (setenv "WORKON_HOME" "~/.pyenv/versions/3.12.7")
 (pyvenv-mode)
 (pyvenv-activate "~/.pyenv/versions/3.12.7")
+(with-eval-after-load 'flycheck
+  (setq flycheck-gcc-include-path
+        (list
+         "/home/alex/.pyenv/versions/3.12.7/include/python3.12"
+         "/home/alex/.pyenv/versions/3.12.7/lib/python3.12/site-packages/pybind11/include")))
+
 
 ;; Emacs Usability Hooks
 (add-hook 'emacs-startup-hook (lambda () (interactive) (ansi-term (getenv "SHELL"))))
