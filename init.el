@@ -138,6 +138,16 @@
 (add-hook 'c++-mode-hook #'hs-minor-mode)
 (add-hook 'c-mode-hook #'hs-minor-mode)
 
+;; Example: change C++ keywords to bright red
+(custom-set-faces
+ '(font-lock-keyword-face ((t (:foreground "#FF5555" :weight bold))))
+ '(font-lock-type-face ((t (:foreground "#F1FA8C"))))    ;; types in yellow
+ '(font-lock-function-name-face ((t (:foreground "#8BE9FD")))) ;; functions in cyan
+ '(font-lock-comment-face ((t (:foreground "#BB63E8")))) ;; comments in purple
+ '(font-lock-string-face ((t (:foreground "#50FA7B")))) ;; strings in green
+)
+
+
 (global-auto-revert-mode t)
 
 (setenv "WORKON_HOME" "~/.pyenv/versions/3.12.7")
