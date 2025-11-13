@@ -106,6 +106,9 @@
           (lambda ()
             (setq-local flymake-diagnostic-functions
                         (remove 'flymake-cc flymake-diagnostic-functions))))
+(add-hook 'c++-mode-hook
+	  (lambda ()
+	    (local-set-key (kbd "C-c C-v") 'compile)))
 
 
 ;; Set Environment Variables
