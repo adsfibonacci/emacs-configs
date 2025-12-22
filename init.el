@@ -93,6 +93,12 @@
 (set-frame-parameter nil 'alpha-background 100)
 (add-to-list 'default-frame-alist '(alpha-background . 100))
 
+(defun open-ansi-term-here (dir)
+  "Open an ansi-term in DIR."
+  (let ((default-directory (file-name-as-directory (expand-file-name dir))))
+    (ansi-term (getenv "SHELL"))))
+
+
 ;; Disable the built-in C/C++ Flymake backend (flymake-cc)
 (setq flymake-diagnostic-functions
       (remove 'flymake-cc flymake-diagnostic-functions))
