@@ -141,23 +141,45 @@
 (add-hook 'c-mode-hook #'lsp)
 (add-hook 'lsp-mode-hook #'lsp-lens-mode)
 (require 'rust-mode)
+(require 'lsp-pyright)
+;; Disable builtin python-flymake (let LSP handle diagnostics)
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq-local flymake-diagnostic-functions nil)))
+
+(set-face-attribute 'default nil :font "Noto Sans Mono")
+(set-fontset-font t 'unicode (font-spec :family "Noto Color Emoji"))
+
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (add-hook 'rust-mode-hook #'lsp)
+(add-hook 'python-mode-hook #'lsp-deferred)
+
+(setq lsp-pyright-python-executable-cmd
+      "/home/alex/.pyenv/versions/3.12.7/bin/python")
 
 (add-hook 'c++-mode-hook #'hs-minor-mode)
 (add-hook 'c-mode-hook #'hs-minor-mode)
 
 ;; Example: change C++ keywords to bright red
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(font-lock-comment-face ((t (:foreground "#BB63E8"))))
+ '(font-lock-function-name-face ((t (:foreground "#8BE9FD"))))
  '(font-lock-keyword-face ((t (:foreground "#FF5555" :weight bold))))
- '(font-lock-type-face ((t (:foreground "#F1FA8C"))))    ;; types in yellow
- '(font-lock-function-name-face ((t (:foreground "#8BE9FD")))) ;; functions in cyan
- '(font-lock-comment-face ((t (:foreground "#BB63E8")))) ;; comments in purple
- '(font-lock-string-face ((t (:foreground "#50FA7B")))) ;; strings in green
-)
+ '(font-lock-string-face ((t (:foreground "#50FA7B"))))
+ '(font-lock-type-face ((t (:foreground "#F1FA8C"))))
+ '(line-number ((t (:background "gray8" :foreground "thistle" :slant italic :width ultra-condensed))))
+ '(line-number-current-line ((t (:background "gray20" :foreground "thistle" :slant italic :width ultra-condensed))))
+ '(line-number-major-tick ((t (:background "grey75" :weight bold))))
+ '(org-block ((t (:background "gray5" :foreground "dim gray" :weight semi-bold)))))
 
 
 (global-auto-revert-mode t)
+
+
 
 (setenv "WORKON_HOME" "~/.pyenv/versions/3.12.7")
 (pyvenv-mode)
@@ -208,20 +230,12 @@
  '(elcord-quiet t)
  '(elcord-refresh-rate 10)
  '(org-babel-load-languages
-   '((emacs-lisp . t) (C . t) (R . t) (python . t) (latex . t) (shell . t) (julia . t )))
+   '((emacs-lisp . t) (C . t) (R . t) (python . t) (latex . t)
+     (shell . t) (julia . t)))
  '(package-selected-packages
-   '(## auctex dap-mode elcord ess linum-off
-	lsp-latex lsp-ui magit neotree org-modern pdf-tools pyvenv
-	rust-mode treemacs-all-the-icons yasnippet)) ;;atom-one-dark-theme 
+   '(## auctex dap-mode elcord ess linum-off lsp-latex lsp-pyright lsp-ui
+	magit neotree org-modern pdf-tools pyvenv rust-mode
+	treemacs-all-the-icons yasnippet))
  '(warning-suppress-types '((ox-latex))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(font-lock-string-face ((t nil)))
- '(line-number ((t (:background "gray8" :foreground "thistle" :slant italic :width ultra-condensed))))
- '(line-number-current-line ((t (:background "gray20" :foreground "thistle" :slant italic :width ultra-condensed))))
- '(line-number-major-tick ((t (:background "grey75" :weight bold))))
- '(org-block ((t (:background "gray5" :foreground "dim gray" :weight semi-bold)))))
+
 (provide 'init)
