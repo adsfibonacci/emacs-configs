@@ -10,6 +10,8 @@
 (setq image-auto-resize nil) ; if you have such a package
 ;; Automatically revert all buffers when the underlying file changes
 (global-auto-revert-mode 1)
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
 
 (add-to-list 'default-frame-alist '(foreground-color . "#FFFFFF"))
 (add-to-list 'default-frame-alist '(background-color . "#000000"))
@@ -19,6 +21,9 @@
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)  ;; optional, quiets messages
 (add-hook 'image-mode-hook #'auto-revert-mode)
+
+(add-to-list 'load-path "~/.emacs.d/")
+(require 'remote-shortcuts)
 
 ;; (add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
 

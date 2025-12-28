@@ -12,3 +12,4 @@ eln-cache/
 tramp
 .extensions/
 *.el~
+remote-shortcuts.el
