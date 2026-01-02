@@ -22,7 +22,7 @@
 (setq auto-revert-verbose nil)  ;; optional, quiets messages
 (add-hook 'image-mode-hook #'auto-revert-mode)
 
-(add-to-list 'load-path "~/.emacs.d/")
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 (require 'remote-shortcuts)
 
 ;; (add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
@@ -144,6 +144,33 @@
 (require 'lsp-mode)
 (add-hook 'c++-mode-hook #'lsp)
 (add-hook 'c-mode-hook #'lsp)
+
+;; Built-in since Emacs 29
+(require 'eglot)
+
+;; Enable eglot for C/C++
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'c++-mode-hook 'eglot-ensure)
+
+;; Tell eglot to use clangd
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '((c++-mode c-mode) . ("clangd"))))
+
+;; Load corfu
+(require 'corfu)
+(require 'corfu-popupinfo) 
+(global-corfu-mode 1)
+(setq corfu-auto t
+      corfu-cycle t
+      corfu-quit-no-match 'separator
+      corfu-auto-delay 0
+      corfu-auto-prefix 1)
+
+(define-key corfu-map (kbd "TAB") 'corfu-next)
+(define-key corfu-map (kbd "<tab>") 'corfu-next)
+(define-key corfu-map (kbd "S-TAB") 'corfu-previous)
+
 (add-hook 'lsp-mode-hook #'lsp-lens-mode)
 (require 'rust-mode)
 (require 'lsp-pyright)
@@ -238,9 +265,9 @@
    '((emacs-lisp . t) (C . t) (R . t) (python . t) (latex . t)
      (shell . t) (julia . t)))
  '(package-selected-packages
-   '(## auctex dap-mode elcord ess linum-off lsp-latex lsp-pyright lsp-ui
-	magit neotree org-modern pdf-tools pyvenv rust-mode
-	treemacs-all-the-icons yasnippet))
+   '(## auctex corfu dap-mode elcord ess linum-off lsp-latex lsp-pyright
+        lsp-ui magit neotree org-modern pdf-tools pyvenv rust-mode
+        treemacs-all-the-icons yasnippet))
  '(warning-suppress-types '((ox-latex))))
 
 (provide 'init)
