@@ -1,5 +1,20 @@
-Config files and most packages used in my emacs setup. 
+#+title: Literate Emacs Loading
+#+author: Alex Speigle
+#+property: header-args:elisp :tangle init.el :results none :eval never-export :comments link
+#+startup: overview indent
 
-Should have minimal installation commands on new devices. 
+* Package Initialization
+This initializes the servers to install packages from. I use Elpa, Melpa, Melpa Development, and Org Elpa. 
 
-Not perfect so some devices might require more intervention. 
+#+begin_src elisp
+  (require 'package)
+  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
+  (add-to-list 'package-archives '("melpa" . "https://stable.melpa.org/packages/"))
+  (add-to-list 'package-archives '("melpa-devel" . "https://melpa.org/packages/"))
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+
+  (package-initialize)
+  (package-refresh-contents)
+#+end_src
+
+
