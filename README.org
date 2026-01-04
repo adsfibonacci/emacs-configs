@@ -17,4 +17,3 @@ This initializes the servers to install packages from. I use Elpa, Melpa, Melpa 
   (package-refresh-contents)
 #+end_src
 
-
