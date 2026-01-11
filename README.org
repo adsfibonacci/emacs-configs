@@ -1,7 +1,7 @@
 #+title: Literate Emacs Loading
 #+author: Alex Speigle
 #+property: header-args:elisp :tangle init.el :results none :eval never-export :comments link
-#+startup: indent
+#+startup: indent show2levels
 
 * Package Initialization
 This initializes the servers to install packages from. I use Elpa, Melpa, Melpa Development, and Org Elpa. 
@@ -162,6 +162,20 @@ It also disables the startup and toolbar modes.
    (shell      . t)
    (julia      . t)))
 #+end_src
+#+name: Shell-Emacs-Sync
+#+begin_src elisp
+  (unless (package-installed-p 'exec-path-from-shell)
+    (package-refresh-contents)
+    (package-install 'exec-path-from-shell))
+  (require 'exec-path-from-shell)
+  (exec-path-from-shell-initialize)
+#+end_src
+#+name: Tramp
+#+begin_src elisp
+  (require 'tramp)
+  (with-eval-after-load 'tramp
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+#+end_src
 
 * Shortcuts
 The remote shortcuts are untracked since they have sensitive information. This file needs to be copied manually. 
@@ -239,7 +253,6 @@ Flymake is not needed since I am using Eglot and LSP servers.
             (setq-local flymake-diagnostic-functions nil)))
 #+end_src
 
-
 ** Python
 This activates the Emacs communication with Pyenv Virtualenv.
 In the local directories, it is able to automatically detect the proper pyrightconfig.json file, and use the server installed in the corresponding environment.
@@ -248,6 +261,47 @@ In the local directories, it is able to automatically detect the proper pyrightc
   (require 'pyvenv)
   (pyvenv-mode 1)
   (pyvenv-tracking-mode 1)
+#+end_src
+
+#+name: Pyright-Directory
+#+begin_src elisp
+  (defun pyenv-pyright ()
+    "Return pyright-langserver command from pyenv based on .python-version."
+    (let* ((root (locate-dominating-file default-directory ".python-version"))
+           (version (and root
+                         (string-trim
+                          (with-temp-buffer
+                            (insert-file-contents
+                             (expand-file-name ".python-version" root))
+                            (buffer-string)))))
+           (server (and version
+                        (expand-file-name
+                         (format "~/.pyenv/versions/%s/bin/pyright-langserver"
+                                 version)))))
+      (when (and server (file-executable-p server))
+        (list server "--stdio"))))  
+#+end_src
+
+
+#+name: Pylsp-Directory
+#+begin_src elisp
+(defun pyenv-pyright ()
+  "Return pyright-langserver command for local or TRAMP buffers."
+  (let* ((root (locate-dominating-file default-directory ".python-version"))
+         (version (and root
+                       (string-trim
+                        (with-temp-buffer
+                          (insert-file-contents
+                           (expand-file-name ".python-version" root))
+                          (buffer-string)))))
+         (home (expand-file-name "~" default-directory))
+         (server (and version
+                      (expand-file-name
+                       (format ".pyenv/versions/%s/bin/pyright-langserver"
+                               version)
+                       home))))
+    (when (and server (file-executable-p server))
+      (list server "--stdio"))))
 #+end_src
 
 ** C/C++
@@ -271,18 +325,46 @@ Not necessarily needed, but just to ensure portability
   (require 'eglot)  
 #+end_src
 
+#+begin_src elisp
+(defun setup-eglot-pyright ()
+  "Configure Eglot to use Pyright for local and remote Python projects."
+  (interactive)
+
+  ;; Ensure TRAMP can find remote executables
+  (with-eval-after-load 'tramp
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+
+  (with-eval-after-load 'eglot
+    (defun my/eglot-pyright-command (_server _workspace)
+      "Return the pyright-langserver command for local or remote Python,
+and echo what PYENV_ROOT evaluates to."
+      (let ((remote-p (file-remote-p default-directory)))
+        (if remote-p
+            (let ((val (string-trim
+                        (shell-command-to-string "echo $PYENV_ROOT"))))
+              (message "[eglot][remote] PYENV_ROOT = '%s'" val)
+              (list "sh" "-c" "$PYENV_ROOT/shims/pyright-langserver --stdio"))
+          (let ((val (getenv "PYENV_ROOT")))
+            (message "[eglot][local] PYENV_ROOT = '%s'" val)
+            (list (expand-file-name "shims/pyright-langserver"
+                                    (or val "~/.pyenv"))
+                  "--stdio")))))
+
+    ;; Register Python mode with our command
+    (add-to-list 'eglot-server-programs
+                 `(python-mode . ,#'my/eglot-pyright-command))))
+
+  ;; Automatically start Eglot in Python buffers
+(add-hook 'python-mode-hook #'eglot-ensure)
+
+(setup-eglot-pyright)
+
+#+end_src
+
 #+name: Python Eglot
 #+begin_src elisp
   (add-hook 'python-mode-hook #'eglot-ensure)
-
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-                 '(python-mode
-                   . ("/home/alex/.pyenv/shims/pyright-langserver" "--stdio")))
-    (add-to-list 'eglot-server-programs
-                 '(python-ts-mode
-                   . ("/home/alex/.pyenv/shims/pyright-langserver" "--stdio")))
-    )  
+  (add-hook 'python-ts-mode-hook #'eglot-ensure)  
 #+end_src
 #+name: C and C++ Eglot
 #+begin_src elisp

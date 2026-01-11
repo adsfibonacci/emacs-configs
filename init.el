@@ -144,6 +144,20 @@
    (julia      . t)))
 ;; Org Babel Languages ends here
 
+;; [[file:README.org::Shell-Emacs-Sync][Shell-Emacs-Sync]]
+(unless (package-installed-p 'exec-path-from-shell)
+  (package-refresh-contents)
+  (package-install 'exec-path-from-shell))
+(require 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
+;; Shell-Emacs-Sync ends here
+
+;; [[file:README.org::Tramp][Tramp]]
+(require 'tramp)
+(with-eval-after-load 'tramp
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+;; Tramp ends here
+
 ;; [[file:README.org::Remote Shortcuts][Remote Shortcuts]]
 (add-to-list 'load-path "~/.emacs.d/lisp/") 
 (require 'remote-shortcuts)
@@ -206,6 +220,44 @@
 (pyvenv-tracking-mode 1)
 ;; Python Environment Setup ends here
 
+;; [[file:README.org::Pyright-Directory][Pyright-Directory]]
+(defun pyenv-pyright ()
+  "Return pyright-langserver command from pyenv based on .python-version."
+  (let* ((root (locate-dominating-file default-directory ".python-version"))
+         (version (and root
+                       (string-trim
+                        (with-temp-buffer
+                          (insert-file-contents
+                           (expand-file-name ".python-version" root))
+                          (buffer-string)))))
+         (server (and version
+                      (expand-file-name
+                       (format "~/.pyenv/versions/%s/bin/pyright-langserver"
+                               version)))))
+    (when (and server (file-executable-p server))
+      (list server "--stdio"))))
+;; Pyright-Directory ends here
+
+;; [[file:README.org::Pylsp-Directory][Pylsp-Directory]]
+(defun pyenv-pyright ()
+  "Return pyright-langserver command for local or TRAMP buffers."
+  (let* ((root (locate-dominating-file default-directory ".python-version"))
+         (version (and root
+                       (string-trim
+                        (with-temp-buffer
+                          (insert-file-contents
+                           (expand-file-name ".python-version" root))
+                          (buffer-string)))))
+         (home (expand-file-name "~" default-directory))
+         (server (and version
+                      (expand-file-name
+                       (format ".pyenv/versions/%s/bin/pyright-langserver"
+                               version)
+                       home))))
+    (when (and server (file-executable-p server))
+      (list server "--stdio"))))
+;; Pylsp-Directory ends here
+
 ;; [[file:README.org::Debuggers][Debuggers]]
 (unless (package-installed-p 'dap-mode)
          (package-refresh-contents)
@@ -223,17 +275,44 @@
 (require 'eglot)
 ;; Eglot:1 ends here
 
-;; [[file:README.org::Python Eglot][Python Eglot]]
+;; [[file:README.org::*Eglot][Eglot:2]]
+(defun setup-eglot-pyright ()
+  "Configure Eglot to use Pyright for local and remote Python projects."
+  (interactive)
+
+  ;; Ensure TRAMP can find remote executables
+  (with-eval-after-load 'tramp
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+
+  (with-eval-after-load 'eglot
+    (defun my/eglot-pyright-command (_server _workspace)
+      "Return the pyright-langserver command for local or remote Python,
+and echo what PYENV_ROOT evaluates to."
+      (let ((remote-p (file-remote-p default-directory)))
+        (if remote-p
+            (let ((val (string-trim
+                        (shell-command-to-string "echo $PYENV_ROOT"))))
+              (message "[eglot][remote] PYENV_ROOT = '%s'" val)
+              (list "sh" "-c" "$PYENV_ROOT/shims/pyright-langserver --stdio"))
+          (let ((val (getenv "PYENV_ROOT")))
+            (message "[eglot][local] PYENV_ROOT = '%s'" val)
+            (list (expand-file-name "shims/pyright-langserver"
+                                    (or val "~/.pyenv"))
+                  "--stdio")))))
+
+    ;; Register Python mode with our command
+    (add-to-list 'eglot-server-programs
+                 `(python-mode . ,#'my/eglot-pyright-command))))
+
+  ;; Automatically start Eglot in Python buffers
 (add-hook 'python-mode-hook #'eglot-ensure)
 
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '(python-mode
-                 . ("/home/alex/.pyenv/shims/pyright-langserver" "--stdio")))
-  (add-to-list 'eglot-server-programs
-               '(python-ts-mode
-                 . ("/home/alex/.pyenv/shims/pyright-langserver" "--stdio")))
-  )
+(setup-eglot-pyright)
+;; Eglot:2 ends here
+
+;; [[file:README.org::Python Eglot][Python Eglot]]
+(add-hook 'python-mode-hook #'eglot-ensure)
+(add-hook 'python-ts-mode-hook #'eglot-ensure)
 ;; Python Eglot ends here
 
 ;; [[file:README.org::C and C++ Eglot][C and C++ Eglot]]
