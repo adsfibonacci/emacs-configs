@@ -178,6 +178,9 @@
 ;; C++-Mode-Keybinds ends here
 
 ;; [[file:README.org::Snippets][Snippets]]
+(unless (package-installed-p 'yasnippet)
+  (package-refresh-contents)
+  (package-install 'yasnippet))
 (require 'yasnippet)
 (yas-global-mode 1)
 ;; Snippets ends here
@@ -215,9 +218,11 @@
 ;; Disable Flymake ends here
 
 ;; [[file:README.org::Python Environment Setup][Python Environment Setup]]
-(require 'pyvenv)
-(pyvenv-mode 1)
-(pyvenv-tracking-mode 1)
+(unless (package-installed-p 'pyenv-mode)
+  (package-refresh-contents)
+  (package-install 'pyenv-mode))
+(require 'pyenv-mode)
+(pyenv-mode 1)
 ;; Python Environment Setup ends here
 
 ;; [[file:README.org::Pyright-Directory][Pyright-Directory]]

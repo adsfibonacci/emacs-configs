@@ -205,6 +205,9 @@ The remote shortcuts are untracked since they have sensitive information. This f
 Enable the snippet shortcuts everywhere 
 #+name: Snippets
 #+begin_src elisp
+  (unless (package-installed-p 'yasnippet)
+    (package-refresh-contents)
+    (package-install 'yasnippet))
   (require 'yasnippet)
   (yas-global-mode 1)
 #+end_src
@@ -258,9 +261,11 @@ This activates the Emacs communication with Pyenv Virtualenv.
 In the local directories, it is able to automatically detect the proper pyrightconfig.json file, and use the server installed in the corresponding environment.
 #+name: Python Environment Setup
 #+begin_src elisp
-  (require 'pyvenv)
-  (pyvenv-mode 1)
-  (pyvenv-tracking-mode 1)
+  (unless (package-installed-p 'pyenv-mode)
+    (package-refresh-contents)
+    (package-install 'pyenv-mode))
+  (require 'pyenv-mode)
+  (pyenv-mode 1)
 #+end_src
 
 #+name: Pyright-Directory
