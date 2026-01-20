@@ -13,5 +13,9 @@ tramp
 .extensions/
 *.el~
 lisp/remote-shortcuts.el
+lisp/mail.org
 .python-environments/
 transient/
+.mbsyncrc
+.mbsyncpass
+.mbsyncpass.gpg

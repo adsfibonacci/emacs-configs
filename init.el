@@ -49,6 +49,16 @@
      ))))
 ;; Org Mode Appearance ends here
 
+;; [[file:README.org::Font/Color][Font/Color]]
+(require 'ansi-color)
+
+(defun org-babel-strip-ansi ()
+  (when (org-in-src-block-p)
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(add-hook 'org-babel-after-execute-hook #'org-babel-strip-ansi)
+;; Font/Color ends here
+
 ;; [[file:README.org::General Environment][General Environment]]
 (setq inhibit-startup-screen t)
 (setq backup-directory-alist `(("." . ,"~/.emacs.d/.backups")))
@@ -158,6 +168,39 @@
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 ;; Tramp ends here
 
+;; [[file:README.org::Tramp-Testing][Tramp-Testing]]
+(defun tramp-print-remote-pyenv-root ()
+  "Print PYENV_ROOT from remote host or local environment."
+  (interactive)
+  (let* ((dir default-directory)
+         (remote (file-remote-p dir))
+         (val
+          (if remote
+              (string-trim
+               (with-temp-buffer
+                 (let ((default-directory dir))
+                   (process-file "sh" nil t nil "-lc" "echo \"$PYENV_ROOT\""))
+                 (buffer-string)))
+            (or (getenv "PYENV_ROOT")
+                (expand-file-name "~/.pyenv")))))
+    (message "%s" (if (and val (not (string-empty-p val)))
+                      val
+                    "PYENV_ROOT is not set"))))
+
+(defun tramp-get-pyenv-root ()
+  "Return PYENV_ROOT from remote host or local environment as a string."
+  (let* ((dir default-directory)
+         (remote (file-remote-p dir)))
+    (if remote
+        (string-trim
+         (with-temp-buffer
+           (let ((default-directory dir))
+             (process-file "sh" nil t nil "-lc" "echo \"$PYENV_ROOT\""))
+           (buffer-string)))
+      (or (getenv "PYENV_ROOT")
+          (expand-file-name "~/.pyenv")))))
+;; Tramp-Testing ends here
+
 ;; [[file:README.org::Remote Shortcuts][Remote Shortcuts]]
 (add-to-list 'load-path "~/.emacs.d/lisp/") 
 (require 'remote-shortcuts)
@@ -188,7 +231,7 @@
 ;; [[file:README.org::Treemacs Configs][Treemacs Configs]]
 (unless (package-installed-p 'treemacs)
   (package-refresh-contents)
-  (package-install treemacs))
+  (package-install 'treemacs))
 
 (require 'treemacs)
 (with-eval-after-load 'treemacs
@@ -198,6 +241,14 @@
         (s-ends-with? ".o" file)))
   (push #'treemacs-custom-filter treemacs-ignored-file-predicates))
 ;; Treemacs Configs ends here
+
+;; [[file:README.org::*Projectile][Projectile:1]]
+(unless (package-installed-p 'projectile)
+  (package-refresh-contents)
+  (package-install 'projectile))
+
+(require 'projectile)
+;; Projectile:1 ends here
 
 ;; [[file:README.org::General Programming Hooks][General Programming Hooks]]
 (add-hook 'prog-mode-hook #'hs-minor-mode)
@@ -276,51 +327,52 @@
 (add-hook 'c-mode-hook #'dap-mode)
 ;; Debuggers ends here
 
+;; [[file:README.org::*Julia][Julia:1]]
+(unless (package-installed-p 'julia-mode)
+  (package-refresh-contents)
+  (package-install 'julia-mode))
+(require 'julia-mode)
+;; Julia:1 ends here
+
+;; [[file:README.org::*R][R:1]]
+(with-eval-after-load 'ob-R
+  (setq org-babel-R-command
+        "R --slave --no-save --no-restore -e \"options(repos=c(CRAN='https://cloud.r-project.org'))\""))
+
+(with-eval-after-load 'ess-r-mode
+  (setq ess-r-command
+        "R --slave --no-save --no-restore -e \"options(repos=c(CRAN='https://cloud.r-project.org'))\""))
+;; R:1 ends here
+
 ;; [[file:README.org::*Eglot][Eglot:1]]
 (require 'eglot)
+(setq eglot-events-buffer-size 10000000)
+(setq eglot-report-progress t)
 ;; Eglot:1 ends here
 
-;; [[file:README.org::*Eglot][Eglot:2]]
-(defun setup-eglot-pyright ()
-  "Configure Eglot to use Pyright for local and remote Python projects."
-  (interactive)
+;; [[file:README.org::Python-Eglot][Python-Eglot]]
+;; Automatically start Eglot in Python buffers
+  (add-hook 'python-mode-hook #'eglot-ensure)
+  (add-hook 'python-ts-mode-hook #'eglot-ensure)
 
-  ;; Ensure TRAMP can find remote executables
-  (with-eval-after-load 'tramp
-    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+(defun custom/eglot-pyright (_interactive)
+  "Return pyright command using pyenv root, TRAMP-aware."
+  (let* ((remote (file-remote-p default-directory))
+         (root (tramp-get-pyenv-root))
+         (full-root (if remote (concat remote root) root))
+         (exe (expand-file-name "shims/pyright-langserver" full-root)))
+    (message "[eglot] Using pyright at: %s" exe)
+    ;; Return the command list directly - NO eglot-alternatives
+    (list exe "--stdio")))
 
   (with-eval-after-load 'eglot
-    (defun my/eglot-pyright-command (_server _workspace)
-      "Return the pyright-langserver command for local or remote Python,
-and echo what PYENV_ROOT evaluates to."
-      (let ((remote-p (file-remote-p default-directory)))
-        (if remote-p
-            (let ((val (string-trim
-                        (shell-command-to-string "echo $PYENV_ROOT"))))
-              (message "[eglot][remote] PYENV_ROOT = '%s'" val)
-              (list "sh" "-c" "$PYENV_ROOT/shims/pyright-langserver --stdio"))
-          (let ((val (getenv "PYENV_ROOT")))
-            (message "[eglot][local] PYENV_ROOT = '%s'" val)
-            (list (expand-file-name "shims/pyright-langserver"
-                                    (or val "~/.pyenv"))
-                  "--stdio")))))
+            (add-to-list 'eglot-server-programs
+                         '(python-mode . custom/eglot-pyright))
+            (add-to-list 'eglot-server-programs
+                         '(python-ts-mode . custom/eglot-pyright)))
+;; Python-Eglot ends here
 
-    ;; Register Python mode with our command
-    (add-to-list 'eglot-server-programs
-                 `(python-mode . ,#'my/eglot-pyright-command))))
-
-  ;; Automatically start Eglot in Python buffers
-(add-hook 'python-mode-hook #'eglot-ensure)
-
-(setup-eglot-pyright)
-;; Eglot:2 ends here
-
-;; [[file:README.org::Python Eglot][Python Eglot]]
-(add-hook 'python-mode-hook #'eglot-ensure)
-(add-hook 'python-ts-mode-hook #'eglot-ensure)
-;; Python Eglot ends here
-
-;; [[file:README.org::C and C++ Eglot][C and C++ Eglot]]
+;; [[file:README.org::C/C++-Eglot][C/C++-Eglot]]
 (add-hook 'c-mode-hook #'eglot-ensure)
 (add-hook 'c++-mode-hook #'eglot-ensure)
 
@@ -332,7 +384,23 @@ and echo what PYENV_ROOT evaluates to."
                '(c-mode
                  . ("clangd")))
   )
-;; C and C++ Eglot ends here
+;; C/C++-Eglot ends here
+
+;; [[file:README.org::Julia Eglot][Julia Eglot]]
+(add-hook 'julia-mode-hook #'eglot-ensure)
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+             '(julia-mode .
+               ("julia" "--startup-file=no" "--history-file=no"
+                "-e"
+                "using LanguageServer, SymbolServer;
+                 depot_path = get(ENV, \"JULIA_DEPOT_PATH\", \"\");
+                 project_path = Base.current_project();
+                 server = LanguageServer.LanguageServerInstance(
+                     stdin, stdout, project_path, depot_path);
+                 run(server);")))
+  )
+;; Julia Eglot ends here
 
 ;; [[file:README.org::Corfu Completion Rules][Corfu Completion Rules]]
 (unless (package-installed-p 'corfu)
@@ -364,6 +432,14 @@ and echo what PYENV_ROOT evaluates to."
 (setq eldoc-box-max-pixel-width 500)
 (setq eldoc-box-max-pixel-height 400)
 ;; Eldoc Appearance Configuration ends here
+
+;; [[file:README.org::Mu4e][Mu4e]]
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+(require 'mu4e)
+(setq mu4e-maildir "~/Mail")
+(setq mu4e-get-mail-command "mbsync --config ~/.emacs.d/.mbsyncrc nameaccount")
+(setq mu4e-update-interval 120)
+;; Mu4e ends here
 
 ;; [[file:README.org::*Conclusion][Conclusion:1]]
 (provide 'init)
