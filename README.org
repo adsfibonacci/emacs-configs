@@ -64,6 +64,7 @@ It also disables the startup and toolbar modes.
        (:background "#0a0017" :foreground "white" :weight normal)
        ))))
 #+end_src
+
 #+name: Font/Color
 #+begin_src elisp
   (require 'ansi-color)
@@ -74,7 +75,7 @@ It also disables the startup and toolbar modes.
 
   (add-hook 'org-babel-after-execute-hook #'org-babel-strip-ansi)
 #+end_src
-  
+
 ** Environment
 #+name: General Environment
 #+begin_src elisp
@@ -264,14 +265,24 @@ Enable the snippet shortcuts everywhere
   (unless (package-installed-p 'treemacs)
     (package-refresh-contents)
     (package-install 'treemacs))
+  (unless (package-installed-p 's)
+    (package-refresh-contents)
+    (package-install 's))
 
   (require 'treemacs)
+  (require 's)
+
   (with-eval-after-load 'treemacs
     (defun treemacs-custom-filter (file _)
       (or (s-ends-with? ".aux" file)
           (s-ends-with? ".log" file)
-          (s-ends-with? ".o" file)))
-    (push #'treemacs-custom-filter treemacs-ignored-file-predicates))
+          (s-ends-with? ".o" file)
+          (s-ends-with? ".pyc" file)
+          (s-ends-with? ".bak" file)
+          (s-ends-with? "~" file)))
+    
+    (add-to-list 'treemacs-ignored-file-predicates
+                 #'treemacs-custom-filter))
 #+end_src
 
 ** Projectile
@@ -284,6 +295,16 @@ Enable the snippet shortcuts everywhere
 #+end_src
 
 ** Magit
+#+name: Magit Setup
+#+begin_src elisp
+  (unless (package-installed-p 'magit)
+    (package-refresh-contents)
+    (package-install 'magit))
+  (require 'magit)
+  (setq magit-diff-refine-hunk 'all)
+  (global-auto-revert-mode 1)
+#+end_src
+
 
 * Programming
 ** General
@@ -306,6 +327,19 @@ Flymake is not needed since I am using Eglot and LSP servers.
   (add-hook 'python-mode-hook
           (lambda ()
             (setq-local flymake-diagnostic-functions nil)))
+#+end_src
+
+#+name: imenu
+#+begin_src elisp
+  (unless (package-installed-p 'imenu-list)
+   (package-refresh-contents)
+   (package-install 'imenu-list))
+  (require 'imenu-list)
+  (setq imenu-list-focus-after-activation t
+        imenu-list-auto-resize t
+        imenu-list-size 30)
+  (global-set-key (kbd "C-c i") #'imenu-list-smart-toggle)
+  (add-hook 'prog-mode-hook #'outline-minor-mode)
 #+end_src
 
 ** Python
@@ -359,6 +393,19 @@ In the local directories, it is able to automatically detect the proper pyrightc
                        home))))
     (when (and server (file-executable-p server))
       (list server "--stdio"))))
+#+end_src
+
+#+name: Emacs IPython Notebooks
+#+begin_src elisp
+  (unless (package-installed-p 'ein)
+    (package-refresh-contents)
+    (package-install ein))
+
+  (require 'ein)
+  (setq ein:jupyter-default-server-command
+      (lambda ()
+        (expand-file-name "bin/jupyter" pyvenv-virtual-env)))
+  (add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:notebook-mode))
 #+end_src
 
 ** C/C++
@@ -491,23 +538,6 @@ Not necessarily needed, but just to ensure portability
   (setq eldoc-documentation-strategy 'eldoc-documentation-compose)
   (setq eldoc-box-max-pixel-width 500)
   (setq eldoc-box-max-pixel-height 400)
-#+end_src
-
-
-* Email
-This is in process, but difficult due to 2FA issues. 
-#+name: Mu4e
-#+begin_src elisp
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
-  (require 'mu4e)
-  (setq mu4e-maildir "~/.mail/umich/")
-  (setq mu4e-sent-folder "/Sent")
-  (setq mu4e-drafts-folder "/Drafts")
-  (setq mu4e-trash-folder "/Trash")
-  (setq mu4e-refile-folder "/Archive")
-  
-  (setq mu4e-get-mail-command "mbsync -a")
-  (setq mu4e-update-interval 120)
 #+end_src
 
 

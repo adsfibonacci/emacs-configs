@@ -31,6 +31,8 @@ evaluate the variable `yas-minor-mode'.
 The mode's hook is called both when the mode is enabled and when it is
 disabled.
 
+\\{yas-minor-mode-map}
+
 (fn &optional ARG)" t)
 (put 'yas-global-mode 'globalized-minor-mode t)
 (defvar yas-global-mode nil "\
@@ -58,6 +60,7 @@ See `yas-minor-mode' for more information on Yas minor mode.
 (fn &optional ARG)" t)
 (autoload 'snippet-mode "yasnippet" "A mode for editing yasnippets" t nil)
 (register-definition-prefixes "yasnippet" '("help-snippet-def" "snippet-mode-map" "yas"))
+
 
 ;;; End of scraped data
 

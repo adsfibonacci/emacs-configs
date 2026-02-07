@@ -42,11 +42,11 @@
 (setq org-hide-keywords t)
 
 (custom-set-faces
- '(org-block
-   (
-    (t
-     (:background "#0a0017" :foreground "white" :weight normal)
-     ))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-block ((t (:background "#0a0017" :foreground "white" :weight normal)))))
 ;; Org Mode Appearance ends here
 
 ;; [[file:README.org::Font/Color][Font/Color]]
@@ -232,14 +232,24 @@
 (unless (package-installed-p 'treemacs)
   (package-refresh-contents)
   (package-install 'treemacs))
+(unless (package-installed-p 's)
+  (package-refresh-contents)
+  (package-install 's))
 
 (require 'treemacs)
+(require 's)
+
 (with-eval-after-load 'treemacs
   (defun treemacs-custom-filter (file _)
     (or (s-ends-with? ".aux" file)
         (s-ends-with? ".log" file)
-        (s-ends-with? ".o" file)))
-  (push #'treemacs-custom-filter treemacs-ignored-file-predicates))
+        (s-ends-with? ".o" file)
+        (s-ends-with? ".pyc" file)
+        (s-ends-with? ".bak" file)
+        (s-ends-with? "~" file)))
+  
+  (add-to-list 'treemacs-ignored-file-predicates
+               #'treemacs-custom-filter))
 ;; Treemacs Configs ends here
 
 ;; [[file:README.org::*Projectile][Projectile:1]]
@@ -249,6 +259,15 @@
 
 (require 'projectile)
 ;; Projectile:1 ends here
+
+;; [[file:README.org::Magit Setup][Magit Setup]]
+(unless (package-installed-p 'magit)
+  (package-refresh-contents)
+  (package-install 'magit))
+(require 'magit)
+(setq magit-diff-refine-hunk 'all)
+(global-auto-revert-mode 1)
+;; Magit Setup ends here
 
 ;; [[file:README.org::General Programming Hooks][General Programming Hooks]]
 (add-hook 'prog-mode-hook #'hs-minor-mode)
@@ -267,6 +286,18 @@
         (lambda ()
           (setq-local flymake-diagnostic-functions nil)))
 ;; Disable Flymake ends here
+
+;; [[file:README.org::imenu][imenu]]
+(unless (package-installed-p 'imenu-list)
+ (package-refresh-contents)
+ (package-install 'imenu-list))
+(require 'imenu-list)
+(setq imenu-list-focus-after-activation t
+      imenu-list-auto-resize t
+      imenu-list-size 30)
+(global-set-key (kbd "C-c i") #'imenu-list-smart-toggle)
+(add-hook 'prog-mode-hook #'outline-minor-mode)
+;; imenu ends here
 
 ;; [[file:README.org::Python Environment Setup][Python Environment Setup]]
 (unless (package-installed-p 'pyenv-mode)
@@ -313,6 +344,18 @@
     (when (and server (file-executable-p server))
       (list server "--stdio"))))
 ;; Pylsp-Directory ends here
+
+;; [[file:README.org::Emacs IPython Notebooks][Emacs IPython Notebooks]]
+(unless (package-installed-p 'ein)
+  (package-refresh-contents)
+  (package-install ein))
+
+(require 'ein)
+(setq ein:jupyter-default-server-command
+    (lambda ()
+      (expand-file-name "bin/jupyter" pyvenv-virtual-env)))
+(add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:notebook-mode))
+;; Emacs IPython Notebooks ends here
 
 ;; [[file:README.org::Debuggers][Debuggers]]
 (unless (package-installed-p 'dap-mode)
@@ -436,11 +479,30 @@
 ;; [[file:README.org::Mu4e][Mu4e]]
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
-(setq mu4e-maildir "~/Mail")
-(setq mu4e-get-mail-command "mbsync --config ~/.emacs.d/.mbsyncrc nameaccount")
+(setq mu4e-maildir "~/.mail/umich/")
+(setq mu4e-sent-folder "/Sent")
+(setq mu4e-drafts-folder "/Drafts")
+(setq mu4e-trash-folder "/Trash")
+(setq mu4e-refile-folder "/Archive")
+
+(setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-update-interval 120)
 ;; Mu4e ends here
 
 ;; [[file:README.org::*Conclusion][Conclusion:1]]
 (provide 'init)
 ;; Conclusion:1 ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(atom-one-dark-theme auctex-latexmk auto-complete cape corfu dap-mode
+                         direx eglot ein elcord eldoc-box epc ess
+                         imenu-list julia-mode linum-off lsp-latex
+                         lsp-pyright lsp-ui magit neotree org-modern
+                         pdf-tools projectile python-environment
+                         pyvenv rust-mode shell-maker treemacs
+                         treemacs-all-the-icons yasnippet
+                         yasnippet-classic-snippets yasnippet-snippets)))
