@@ -16,7 +16,7 @@ This initializes the servers to install packages from. I use Elpa, Melpa, Melpa 
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
 
   (package-initialize)
-  ;; (package-refresh-contents) Uncomment When Done Configuring
+  (package-refresh-contents)
 #+end_src
 
 * Environment and Appearance
@@ -154,7 +154,6 @@ It also disables the startup and toolbar modes.
   (require 'ob)
   (require 'ob-python)
   (unless (package-installed-p 'ess)
-    (package-refresh-contents)
     (package-install 'corfu))
   (require 'ess)
   (require 'ess-site)
@@ -176,7 +175,6 @@ It also disables the startup and toolbar modes.
 #+name: Shell-Emacs-Sync
 #+begin_src elisp
   (unless (package-installed-p 'exec-path-from-shell)
-    (package-refresh-contents)
     (package-install 'exec-path-from-shell))
   (require 'exec-path-from-shell)
   (exec-path-from-shell-initialize)
@@ -252,21 +250,39 @@ Enable the snippet shortcuts everywhere
 #+name: Snippets
 #+begin_src elisp
   (unless (package-installed-p 'yasnippet)
-    (package-refresh-contents)
     (package-install 'yasnippet))
   (require 'yasnippet)
   (yas-global-mode 1)
 #+end_src
 
 * Plugins
+
+** Magit
+#+name: Magit Setup
+#+begin_src elisp
+  (unless (package-installed-p 'magit)
+    (package-install 'magit))
+  (require 'magit)
+  (setq magit-diff-refine-hunk 'all)
+  (global-auto-revert-mode 1)
+#+end_src
+
 ** Treemacs
+#+name: Treemacs Bookmarks
+#+begin_src elisp
+;; Prevent Treemacs from trying to load magit-bookmark
+(with-eval-after-load 'treemacs-bookmarks
+  (define-minor-mode treemacs--dummy-magit-bookmark-mode
+    "Dummy mode to satisfy Treemacs bookmark requirement."))
+
+(provide 'magit-bookmark)  ;; pretend the feature exists
+#+end_src
+
 #+name: Treemacs Configs
 #+begin_src elisp
   (unless (package-installed-p 'treemacs)
-    (package-refresh-contents)
     (package-install 'treemacs))
   (unless (package-installed-p 's)
-    (package-refresh-contents)
     (package-install 's))
 
   (require 'treemacs)
@@ -288,22 +304,11 @@ Enable the snippet shortcuts everywhere
 ** Projectile
 #+begin_src elisp
   (unless (package-installed-p 'projectile)
-    (package-refresh-contents)
     (package-install 'projectile))
 
   (require 'projectile)
 #+end_src
 
-** Magit
-#+name: Magit Setup
-#+begin_src elisp
-  (unless (package-installed-p 'magit)
-    (package-refresh-contents)
-    (package-install 'magit))
-  (require 'magit)
-  (setq magit-diff-refine-hunk 'all)
-  (global-auto-revert-mode 1)
-#+end_src
 
 
 * Programming
@@ -332,7 +337,6 @@ Flymake is not needed since I am using Eglot and LSP servers.
 #+name: imenu
 #+begin_src elisp
   (unless (package-installed-p 'imenu-list)
-   (package-refresh-contents)
    (package-install 'imenu-list))
   (require 'imenu-list)
   (setq imenu-list-focus-after-activation t
@@ -348,7 +352,6 @@ In the local directories, it is able to automatically detect the proper pyrightc
 #+name: Python Environment Setup
 #+begin_src elisp
   (unless (package-installed-p 'pyenv-mode)
-    (package-refresh-contents)
     (package-install 'pyenv-mode))
   (require 'pyenv-mode)
   (pyenv-mode 1)
@@ -398,8 +401,7 @@ In the local directories, it is able to automatically detect the proper pyrightc
 #+name: Emacs IPython Notebooks
 #+begin_src elisp
   (unless (package-installed-p 'ein)
-    (package-refresh-contents)
-    (package-install ein))
+    (package-install 'ein))
 
   (require 'ein)
   (setq ein:jupyter-default-server-command
@@ -412,7 +414,6 @@ In the local directories, it is able to automatically detect the proper pyrightc
 #+name: Debuggers
 #+begin_src elisp
   (unless (package-installed-p 'dap-mode)
-           (package-refresh-contents)
            (package-install 'dap-mode))
   (require 'dap-gdb-lldb)
   (require 'dap-cpptools)
@@ -426,7 +427,6 @@ In the local directories, it is able to automatically detect the proper pyrightc
 ** Julia
 #+begin_src elisp
   (unless (package-installed-p 'julia-mode)
-    (package-refresh-contents)
     (package-install 'julia-mode))
   (require 'julia-mode)  
 #+end_src
@@ -509,7 +509,6 @@ Not necessarily needed, but just to ensure portability
 #+name: Corfu Completion Rules
 #+begin_src elisp
   (unless (package-installed-p 'corfu)
-    (package-refresh-contents)
     (package-install 'corfu))
   (require 'corfu)
   (require 'corfu-popupinfo)
@@ -530,7 +529,6 @@ Not necessarily needed, but just to ensure portability
 #+name: Eldoc Appearance Configuration
 #+begin_src elisp
   (unless (package-installed-p 'eldoc-box)
-    (package-refresh-contents)
     (package-install 'eldoc-box))
   (require 'eldoc-box)
   (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode)
