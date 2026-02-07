@@ -42,12 +42,22 @@
 (setq org-hide-keywords t)
 
 (custom-set-faces
- '(org-block
-   (
-    (t
-     (:background "#0a0017" :foreground "white" :weight normal)
-     ))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-block ((t (:background "#0a0017" :foreground "white" :weight normal)))))
 ;; Org Mode Appearance ends here
+
+;; [[file:README.org::Font/Color][Font/Color]]
+(require 'ansi-color)
+
+(defun org-babel-strip-ansi ()
+  (when (org-in-src-block-p)
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(add-hook 'org-babel-after-execute-hook #'org-babel-strip-ansi)
+;; Font/Color ends here
 
 ;; [[file:README.org::General Environment][General Environment]]
 (setq inhibit-startup-screen t)
@@ -144,6 +154,53 @@
    (julia      . t)))
 ;; Org Babel Languages ends here
 
+;; [[file:README.org::Shell-Emacs-Sync][Shell-Emacs-Sync]]
+(unless (package-installed-p 'exec-path-from-shell)
+  (package-refresh-contents)
+  (package-install 'exec-path-from-shell))
+(require 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
+;; Shell-Emacs-Sync ends here
+
+;; [[file:README.org::Tramp][Tramp]]
+(require 'tramp)
+(with-eval-after-load 'tramp
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+;; Tramp ends here
+
+;; [[file:README.org::Tramp-Testing][Tramp-Testing]]
+(defun tramp-print-remote-pyenv-root ()
+  "Print PYENV_ROOT from remote host or local environment."
+  (interactive)
+  (let* ((dir default-directory)
+         (remote (file-remote-p dir))
+         (val
+          (if remote
+              (string-trim
+               (with-temp-buffer
+                 (let ((default-directory dir))
+                   (process-file "sh" nil t nil "-lc" "echo \"$PYENV_ROOT\""))
+                 (buffer-string)))
+            (or (getenv "PYENV_ROOT")
+                (expand-file-name "~/.pyenv")))))
+    (message "%s" (if (and val (not (string-empty-p val)))
+                      val
+                    "PYENV_ROOT is not set"))))
+
+(defun tramp-get-pyenv-root ()
+  "Return PYENV_ROOT from remote host or local environment as a string."
+  (let* ((dir default-directory)
+         (remote (file-remote-p dir)))
+    (if remote
+        (string-trim
+         (with-temp-buffer
+           (let ((default-directory dir))
+             (process-file "sh" nil t nil "-lc" "echo \"$PYENV_ROOT\""))
+           (buffer-string)))
+      (or (getenv "PYENV_ROOT")
+          (expand-file-name "~/.pyenv")))))
+;; Tramp-Testing ends here
+
 ;; [[file:README.org::Remote Shortcuts][Remote Shortcuts]]
 (add-to-list 'load-path "~/.emacs.d/lisp/") 
 (require 'remote-shortcuts)
@@ -164,6 +221,9 @@
 ;; C++-Mode-Keybinds ends here
 
 ;; [[file:README.org::Snippets][Snippets]]
+(unless (package-installed-p 'yasnippet)
+  (package-refresh-contents)
+  (package-install 'yasnippet))
 (require 'yasnippet)
 (yas-global-mode 1)
 ;; Snippets ends here
@@ -191,6 +251,14 @@
   (add-to-list 'treemacs-ignored-file-predicates
                #'treemacs-custom-filter))
 ;; Treemacs Configs ends here
+
+;; [[file:README.org::*Projectile][Projectile:1]]
+(unless (package-installed-p 'projectile)
+  (package-refresh-contents)
+  (package-install 'projectile))
+
+(require 'projectile)
+;; Projectile:1 ends here
 
 ;; [[file:README.org::Magit Setup][Magit Setup]]
 (unless (package-installed-p 'magit)
@@ -232,10 +300,50 @@
 ;; imenu ends here
 
 ;; [[file:README.org::Python Environment Setup][Python Environment Setup]]
-(require 'pyvenv)
-(pyvenv-mode 1)
-(pyvenv-tracking-mode 1)
+(unless (package-installed-p 'pyenv-mode)
+  (package-refresh-contents)
+  (package-install 'pyenv-mode))
+(require 'pyenv-mode)
+(pyenv-mode 1)
 ;; Python Environment Setup ends here
+
+;; [[file:README.org::Pyright-Directory][Pyright-Directory]]
+(defun pyenv-pyright ()
+  "Return pyright-langserver command from pyenv based on .python-version."
+  (let* ((root (locate-dominating-file default-directory ".python-version"))
+         (version (and root
+                       (string-trim
+                        (with-temp-buffer
+                          (insert-file-contents
+                           (expand-file-name ".python-version" root))
+                          (buffer-string)))))
+         (server (and version
+                      (expand-file-name
+                       (format "~/.pyenv/versions/%s/bin/pyright-langserver"
+                               version)))))
+    (when (and server (file-executable-p server))
+      (list server "--stdio"))))
+;; Pyright-Directory ends here
+
+;; [[file:README.org::Pylsp-Directory][Pylsp-Directory]]
+(defun pyenv-pyright ()
+  "Return pyright-langserver command for local or TRAMP buffers."
+  (let* ((root (locate-dominating-file default-directory ".python-version"))
+         (version (and root
+                       (string-trim
+                        (with-temp-buffer
+                          (insert-file-contents
+                           (expand-file-name ".python-version" root))
+                          (buffer-string)))))
+         (home (expand-file-name "~" default-directory))
+         (server (and version
+                      (expand-file-name
+                       (format ".pyenv/versions/%s/bin/pyright-langserver"
+                               version)
+                       home))))
+    (when (and server (file-executable-p server))
+      (list server "--stdio"))))
+;; Pylsp-Directory ends here
 
 ;; [[file:README.org::Emacs IPython Notebooks][Emacs IPython Notebooks]]
 (unless (package-installed-p 'ein)
@@ -262,24 +370,52 @@
 (add-hook 'c-mode-hook #'dap-mode)
 ;; Debuggers ends here
 
+;; [[file:README.org::*Julia][Julia:1]]
+(unless (package-installed-p 'julia-mode)
+  (package-refresh-contents)
+  (package-install 'julia-mode))
+(require 'julia-mode)
+;; Julia:1 ends here
+
+;; [[file:README.org::*R][R:1]]
+(with-eval-after-load 'ob-R
+  (setq org-babel-R-command
+        "R --slave --no-save --no-restore -e \"options(repos=c(CRAN='https://cloud.r-project.org'))\""))
+
+(with-eval-after-load 'ess-r-mode
+  (setq ess-r-command
+        "R --slave --no-save --no-restore -e \"options(repos=c(CRAN='https://cloud.r-project.org'))\""))
+;; R:1 ends here
+
 ;; [[file:README.org::*Eglot][Eglot:1]]
 (require 'eglot)
+(setq eglot-events-buffer-size 10000000)
+(setq eglot-report-progress t)
 ;; Eglot:1 ends here
 
-;; [[file:README.org::Python Eglot][Python Eglot]]
-(add-hook 'python-mode-hook #'eglot-ensure)
+;; [[file:README.org::Python-Eglot][Python-Eglot]]
+;; Automatically start Eglot in Python buffers
+  (add-hook 'python-mode-hook #'eglot-ensure)
+  (add-hook 'python-ts-mode-hook #'eglot-ensure)
 
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '(python-mode
-                 . ("/home/alex/.pyenv/shims/pyright-langserver" "--stdio")))
-  (add-to-list 'eglot-server-programs
-               '(python-ts-mode
-                 . ("/home/alex/.pyenv/shims/pyright-langserver" "--stdio")))
-  )
-;; Python Eglot ends here
+(defun custom/eglot-pyright (_interactive)
+  "Return pyright command using pyenv root, TRAMP-aware."
+  (let* ((remote (file-remote-p default-directory))
+         (root (tramp-get-pyenv-root))
+         (full-root (if remote (concat remote root) root))
+         (exe (expand-file-name "shims/pyright-langserver" full-root)))
+    (message "[eglot] Using pyright at: %s" exe)
+    ;; Return the command list directly - NO eglot-alternatives
+    (list exe "--stdio")))
 
-;; [[file:README.org::C and C++ Eglot][C and C++ Eglot]]
+  (with-eval-after-load 'eglot
+            (add-to-list 'eglot-server-programs
+                         '(python-mode . custom/eglot-pyright))
+            (add-to-list 'eglot-server-programs
+                         '(python-ts-mode . custom/eglot-pyright)))
+;; Python-Eglot ends here
+
+;; [[file:README.org::C/C++-Eglot][C/C++-Eglot]]
 (add-hook 'c-mode-hook #'eglot-ensure)
 (add-hook 'c++-mode-hook #'eglot-ensure)
 
@@ -291,7 +427,23 @@
                '(c-mode
                  . ("clangd")))
   )
-;; C and C++ Eglot ends here
+;; C/C++-Eglot ends here
+
+;; [[file:README.org::Julia Eglot][Julia Eglot]]
+(add-hook 'julia-mode-hook #'eglot-ensure)
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+             '(julia-mode .
+               ("julia" "--startup-file=no" "--history-file=no"
+                "-e"
+                "using LanguageServer, SymbolServer;
+                 depot_path = get(ENV, \"JULIA_DEPOT_PATH\", \"\");
+                 project_path = Base.current_project();
+                 server = LanguageServer.LanguageServerInstance(
+                     stdin, stdout, project_path, depot_path);
+                 run(server);")))
+  )
+;; Julia Eglot ends here
 
 ;; [[file:README.org::Corfu Completion Rules][Corfu Completion Rules]]
 (unless (package-installed-p 'corfu)
@@ -324,6 +476,33 @@
 (setq eldoc-box-max-pixel-height 400)
 ;; Eldoc Appearance Configuration ends here
 
+;; [[file:README.org::Mu4e][Mu4e]]
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+(require 'mu4e)
+(setq mu4e-maildir "~/.mail/umich/")
+(setq mu4e-sent-folder "/Sent")
+(setq mu4e-drafts-folder "/Drafts")
+(setq mu4e-trash-folder "/Trash")
+(setq mu4e-refile-folder "/Archive")
+
+(setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-update-interval 120)
+;; Mu4e ends here
+
 ;; [[file:README.org::*Conclusion][Conclusion:1]]
 (provide 'init)
 ;; Conclusion:1 ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(atom-one-dark-theme auctex-latexmk auto-complete cape corfu dap-mode
+                         direx eglot ein elcord eldoc-box epc ess
+                         imenu-list julia-mode linum-off lsp-latex
+                         lsp-pyright lsp-ui magit neotree org-modern
+                         pdf-tools projectile python-environment
+                         pyvenv rust-mode shell-maker treemacs
+                         treemacs-all-the-icons yasnippet
+                         yasnippet-classic-snippets yasnippet-snippets)))

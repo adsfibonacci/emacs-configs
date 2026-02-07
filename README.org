@@ -1,7 +1,8 @@
 #+title: Literate Emacs Loading
 #+author: Alex Speigle
 #+property: header-args:elisp :tangle init.el :results none :eval never-export :comments link
-#+startup: indent
+#+property: header-args:bash :eval never-export :comments link
+#+startup: indent show2levels
 
 * Package Initialization
 This initializes the servers to install packages from. I use Elpa, Melpa, Melpa Development, and Org Elpa. 
@@ -46,7 +47,6 @@ It also disables the startup and toolbar modes.
   (set-fontset-font t 'unicode (font-spec :family "Noto Color Emoji"))
   (set-face-foreground 'font-lock-comment-face "#C28aa1")
 #+end_src
-
 #+name: Org Mode Appearance
 #+begin_src elisp
   (require 'org)
@@ -63,6 +63,17 @@ It also disables the startup and toolbar modes.
       (t
        (:background "#0a0017" :foreground "white" :weight normal)
        ))))
+#+end_src
+
+#+name: Font/Color
+#+begin_src elisp
+  (require 'ansi-color)
+  
+  (defun org-babel-strip-ansi ()
+    (when (org-in-src-block-p)
+      (ansi-color-apply-on-region (point-min) (point-max))))
+
+  (add-hook 'org-babel-after-execute-hook #'org-babel-strip-ansi)
 #+end_src
 
 ** Environment
@@ -162,6 +173,55 @@ It also disables the startup and toolbar modes.
    (shell      . t)
    (julia      . t)))
 #+end_src
+#+name: Shell-Emacs-Sync
+#+begin_src elisp
+  (unless (package-installed-p 'exec-path-from-shell)
+    (package-refresh-contents)
+    (package-install 'exec-path-from-shell))
+  (require 'exec-path-from-shell)
+  (exec-path-from-shell-initialize)
+#+end_src
+#+name: Tramp
+#+begin_src elisp
+  (require 'tramp)
+  (with-eval-after-load 'tramp
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+#+end_src
+
+#+name: Tramp-Testing
+#+begin_src elisp
+  (defun tramp-print-remote-pyenv-root ()
+    "Print PYENV_ROOT from remote host or local environment."
+    (interactive)
+    (let* ((dir default-directory)
+           (remote (file-remote-p dir))
+           (val
+            (if remote
+                (string-trim
+                 (with-temp-buffer
+                   (let ((default-directory dir))
+                     (process-file "sh" nil t nil "-lc" "echo \"$PYENV_ROOT\""))
+                   (buffer-string)))
+              (or (getenv "PYENV_ROOT")
+                  (expand-file-name "~/.pyenv")))))
+      (message "%s" (if (and val (not (string-empty-p val)))
+                        val
+                      "PYENV_ROOT is not set"))))
+
+  (defun tramp-get-pyenv-root ()
+    "Return PYENV_ROOT from remote host or local environment as a string."
+    (let* ((dir default-directory)
+           (remote (file-remote-p dir)))
+      (if remote
+          (string-trim
+           (with-temp-buffer
+             (let ((default-directory dir))
+               (process-file "sh" nil t nil "-lc" "echo \"$PYENV_ROOT\""))
+             (buffer-string)))
+        (or (getenv "PYENV_ROOT")
+            (expand-file-name "~/.pyenv")))))
+#+end_src
+
 
 * Shortcuts
 The remote shortcuts are untracked since they have sensitive information. This file needs to be copied manually. 
@@ -191,6 +251,9 @@ The remote shortcuts are untracked since they have sensitive information. This f
 Enable the snippet shortcuts everywhere 
 #+name: Snippets
 #+begin_src elisp
+  (unless (package-installed-p 'yasnippet)
+    (package-refresh-contents)
+    (package-install 'yasnippet))
   (require 'yasnippet)
   (yas-global-mode 1)
 #+end_src
@@ -223,6 +286,13 @@ Enable the snippet shortcuts everywhere
 #+end_src
 
 ** Projectile
+#+begin_src elisp
+  (unless (package-installed-p 'projectile)
+    (package-refresh-contents)
+    (package-install 'projectile))
+
+  (require 'projectile)
+#+end_src
 
 ** Magit
 #+name: Magit Setup
@@ -272,15 +342,57 @@ Flymake is not needed since I am using Eglot and LSP servers.
   (add-hook 'prog-mode-hook #'outline-minor-mode)
 #+end_src
 
-
 ** Python
 This activates the Emacs communication with Pyenv Virtualenv.
 In the local directories, it is able to automatically detect the proper pyrightconfig.json file, and use the server installed in the corresponding environment.
 #+name: Python Environment Setup
 #+begin_src elisp
-  (require 'pyvenv)
-  (pyvenv-mode 1)
-  (pyvenv-tracking-mode 1)
+  (unless (package-installed-p 'pyenv-mode)
+    (package-refresh-contents)
+    (package-install 'pyenv-mode))
+  (require 'pyenv-mode)
+  (pyenv-mode 1)
+#+end_src
+
+#+name: Pyright-Directory
+#+begin_src elisp
+  (defun pyenv-pyright ()
+    "Return pyright-langserver command from pyenv based on .python-version."
+    (let* ((root (locate-dominating-file default-directory ".python-version"))
+           (version (and root
+                         (string-trim
+                          (with-temp-buffer
+                            (insert-file-contents
+                             (expand-file-name ".python-version" root))
+                            (buffer-string)))))
+           (server (and version
+                        (expand-file-name
+                         (format "~/.pyenv/versions/%s/bin/pyright-langserver"
+                                 version)))))
+      (when (and server (file-executable-p server))
+        (list server "--stdio"))))  
+#+end_src
+
+
+#+name: Pylsp-Directory
+#+begin_src elisp
+(defun pyenv-pyright ()
+  "Return pyright-langserver command for local or TRAMP buffers."
+  (let* ((root (locate-dominating-file default-directory ".python-version"))
+         (version (and root
+                       (string-trim
+                        (with-temp-buffer
+                          (insert-file-contents
+                           (expand-file-name ".python-version" root))
+                          (buffer-string)))))
+         (home (expand-file-name "~" default-directory))
+         (server (and version
+                      (expand-file-name
+                       (format ".pyenv/versions/%s/bin/pyright-langserver"
+                               version)
+                       home))))
+    (when (and server (file-executable-p server))
+      (list server "--stdio"))))
 #+end_src
 
 #+name: Emacs IPython Notebooks
@@ -311,26 +423,57 @@ In the local directories, it is able to automatically detect the proper pyrightc
   (add-hook 'c-mode-hook #'dap-mode)
 #+end_src
 
+** Julia
+#+begin_src elisp
+  (unless (package-installed-p 'julia-mode)
+    (package-refresh-contents)
+    (package-install 'julia-mode))
+  (require 'julia-mode)  
+#+end_src
+
+** R
+#+begin_src elisp
+  (with-eval-after-load 'ob-R
+    (setq org-babel-R-command
+          "R --slave --no-save --no-restore -e \"options(repos=c(CRAN='https://cloud.r-project.org'))\""))
+
+  (with-eval-after-load 'ess-r-mode
+    (setq ess-r-command
+          "R --slave --no-save --no-restore -e \"options(repos=c(CRAN='https://cloud.r-project.org'))\""))  
+#+end_src
+
 ** Eglot
 Not necessarily needed, but just to ensure portability
 #+begin_src elisp
-  (require 'eglot)  
+  (require 'eglot)
+  (setq eglot-events-buffer-size 10000000)
+  (setq eglot-report-progress t)
 #+end_src
 
-#+name: Python Eglot
+#+name: Python-Eglot
 #+begin_src elisp
+  ;; Automatically start Eglot in Python buffers
   (add-hook 'python-mode-hook #'eglot-ensure)
+  (add-hook 'python-ts-mode-hook #'eglot-ensure)
+
+(defun custom/eglot-pyright (_interactive)
+  "Return pyright command using pyenv root, TRAMP-aware."
+  (let* ((remote (file-remote-p default-directory))
+         (root (tramp-get-pyenv-root))
+         (full-root (if remote (concat remote root) root))
+         (exe (expand-file-name "shims/pyright-langserver" full-root)))
+    (message "[eglot] Using pyright at: %s" exe)
+    ;; Return the command list directly - NO eglot-alternatives
+    (list exe "--stdio")))
 
   (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-                 '(python-mode
-                   . ("/home/alex/.pyenv/shims/pyright-langserver" "--stdio")))
-    (add-to-list 'eglot-server-programs
-                 '(python-ts-mode
-                   . ("/home/alex/.pyenv/shims/pyright-langserver" "--stdio")))
-    )  
+            (add-to-list 'eglot-server-programs
+                         '(python-mode . custom/eglot-pyright))
+            (add-to-list 'eglot-server-programs
+                         '(python-ts-mode . custom/eglot-pyright)))
 #+end_src
-#+name: C and C++ Eglot
+
+#+name: C/C++-Eglot
 #+begin_src elisp
   (add-hook 'c-mode-hook #'eglot-ensure)
   (add-hook 'c++-mode-hook #'eglot-ensure)
@@ -342,6 +485,23 @@ Not necessarily needed, but just to ensure portability
     (add-to-list 'eglot-server-programs
                  '(c-mode
                    . ("clangd")))
+    )
+#+end_src
+
+#+name: Julia Eglot
+#+begin_src elisp
+  (add-hook 'julia-mode-hook #'eglot-ensure)
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+               '(julia-mode .
+                 ("julia" "--startup-file=no" "--history-file=no"
+                  "-e"
+                  "using LanguageServer, SymbolServer;
+                   depot_path = get(ENV, \"JULIA_DEPOT_PATH\", \"\");
+                   project_path = Base.current_project();
+                   server = LanguageServer.LanguageServerInstance(
+                       stdin, stdout, project_path, depot_path);
+                   run(server);")))
     )
 #+end_src
 
@@ -379,6 +539,7 @@ Not necessarily needed, but just to ensure portability
   (setq eldoc-box-max-pixel-width 500)
   (setq eldoc-box-max-pixel-height 400)
 #+end_src
+
 
 * Conclusion
 #+begin_src elisp

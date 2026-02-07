@@ -13,7 +13,7 @@ tramp
 .extensions/
 *.el~
 lisp/remote-shortcuts.el
-elpa/
+lisp/mail.org
 .python-environments/
 transient/
 request/
