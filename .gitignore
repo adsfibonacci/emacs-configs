@@ -17,3 +17,5 @@ lisp/mail.org
 .python-environments/
 transient/
 request/
+init.el
+elpa
