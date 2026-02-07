@@ -16,3 +16,4 @@ lisp/remote-shortcuts.el
 elpa/
 .python-environments/
 transient/
+request/
