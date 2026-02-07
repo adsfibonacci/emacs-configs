@@ -64,7 +64,7 @@ It also disables the startup and toolbar modes.
        (:background "#0a0017" :foreground "white" :weight normal)
        ))))
 #+end_src
-  
+
 ** Environment
 #+name: General Environment
 #+begin_src elisp
@@ -201,20 +201,40 @@ Enable the snippet shortcuts everywhere
 #+begin_src elisp
   (unless (package-installed-p 'treemacs)
     (package-refresh-contents)
-    (package-install treemacs))
+    (package-install 'treemacs))
+  (unless (package-installed-p 's)
+    (package-refresh-contents)
+    (package-install 's))
 
   (require 'treemacs)
+  (require 's)
+
   (with-eval-after-load 'treemacs
     (defun treemacs-custom-filter (file _)
       (or (s-ends-with? ".aux" file)
           (s-ends-with? ".log" file)
-          (s-ends-with? ".o" file)))
-    (push #'treemacs-custom-filter treemacs-ignored-file-predicates))
+          (s-ends-with? ".o" file)
+          (s-ends-with? ".pyc" file)
+          (s-ends-with? ".bak" file)
+          (s-ends-with? "~" file)))
+    
+    (add-to-list 'treemacs-ignored-file-predicates
+                 #'treemacs-custom-filter))
 #+end_src
 
 ** Projectile
 
 ** Magit
+#+name: Magit Setup
+#+begin_src elisp
+  (unless (package-installed-p 'magit)
+    (package-refresh-contents)
+    (package-install 'magit))
+  (require 'magit)
+  (setq magit-diff-refine-hunk 'all)
+  (global-auto-revert-mode 1)
+#+end_src
+
 
 * Programming
 ** General
@@ -239,6 +259,19 @@ Flymake is not needed since I am using Eglot and LSP servers.
             (setq-local flymake-diagnostic-functions nil)))
 #+end_src
 
+#+name: imenu
+#+begin_src elisp
+  (unless (package-installed-p 'imenu-list)
+   (package-refresh-contents)
+   (package-install 'imenu-list))
+  (require 'imenu-list)
+  (setq imenu-list-focus-after-activation t
+        imenu-list-auto-resize t
+        imenu-list-size 30)
+  (global-set-key (kbd "C-c i") #'imenu-list-smart-toggle)
+  (add-hook 'prog-mode-hook #'outline-minor-mode)
+#+end_src
+
 
 ** Python
 This activates the Emacs communication with Pyenv Virtualenv.
@@ -248,6 +281,19 @@ In the local directories, it is able to automatically detect the proper pyrightc
   (require 'pyvenv)
   (pyvenv-mode 1)
   (pyvenv-tracking-mode 1)
+#+end_src
+
+#+name: Emacs IPython Notebooks
+#+begin_src elisp
+  (unless (package-installed-p 'ein)
+    (package-refresh-contents)
+    (package-install ein))
+
+  (require 'ein)
+  (setq ein:jupyter-default-server-command
+      (lambda ()
+        (expand-file-name "bin/jupyter" pyvenv-virtual-env)))
+  (add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:notebook-mode))
 #+end_src
 
 ** C/C++

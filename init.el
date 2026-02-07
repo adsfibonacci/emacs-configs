@@ -171,16 +171,35 @@
 ;; [[file:README.org::Treemacs Configs][Treemacs Configs]]
 (unless (package-installed-p 'treemacs)
   (package-refresh-contents)
-  (package-install treemacs))
+  (package-install 'treemacs))
+(unless (package-installed-p 's)
+  (package-refresh-contents)
+  (package-install 's))
 
 (require 'treemacs)
+(require 's)
+
 (with-eval-after-load 'treemacs
   (defun treemacs-custom-filter (file _)
     (or (s-ends-with? ".aux" file)
         (s-ends-with? ".log" file)
-        (s-ends-with? ".o" file)))
-  (push #'treemacs-custom-filter treemacs-ignored-file-predicates))
+        (s-ends-with? ".o" file)
+        (s-ends-with? ".pyc" file)
+        (s-ends-with? ".bak" file)
+        (s-ends-with? "~" file)))
+  
+  (add-to-list 'treemacs-ignored-file-predicates
+               #'treemacs-custom-filter))
 ;; Treemacs Configs ends here
+
+;; [[file:README.org::Magit Setup][Magit Setup]]
+(unless (package-installed-p 'magit)
+  (package-refresh-contents)
+  (package-install 'magit))
+(require 'magit)
+(setq magit-diff-refine-hunk 'all)
+(global-auto-revert-mode 1)
+;; Magit Setup ends here
 
 ;; [[file:README.org::General Programming Hooks][General Programming Hooks]]
 (add-hook 'prog-mode-hook #'hs-minor-mode)
@@ -200,11 +219,35 @@
           (setq-local flymake-diagnostic-functions nil)))
 ;; Disable Flymake ends here
 
+;; [[file:README.org::imenu][imenu]]
+(unless (package-installed-p 'imenu-list)
+ (package-refresh-contents)
+ (package-install 'imenu-list))
+(require 'imenu-list)
+(setq imenu-list-focus-after-activation t
+      imenu-list-auto-resize t
+      imenu-list-size 30)
+(global-set-key (kbd "C-c i") #'imenu-list-smart-toggle)
+(add-hook 'prog-mode-hook #'outline-minor-mode)
+;; imenu ends here
+
 ;; [[file:README.org::Python Environment Setup][Python Environment Setup]]
 (require 'pyvenv)
 (pyvenv-mode 1)
 (pyvenv-tracking-mode 1)
 ;; Python Environment Setup ends here
+
+;; [[file:README.org::Emacs IPython Notebooks][Emacs IPython Notebooks]]
+(unless (package-installed-p 'ein)
+  (package-refresh-contents)
+  (package-install ein))
+
+(require 'ein)
+(setq ein:jupyter-default-server-command
+    (lambda ()
+      (expand-file-name "bin/jupyter" pyvenv-virtual-env)))
+(add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:notebook-mode))
+;; Emacs IPython Notebooks ends here
 
 ;; [[file:README.org::Debuggers][Debuggers]]
 (unless (package-installed-p 'dap-mode)
