@@ -1,0 +1,25 @@
+IMAPAccount speigad
+Host imap.gmail.com
+User speigad@umich.edu
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.emacs.d/.mbsyncpass.gpg"
+Port 993
+TLSType IMAPS
+AuthMechs *
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore speigad-remote
+Account speigad
+
+MaildirStore speigad-local
+Path ~/.mail/speigad/
+Inbox ~/.mail/speigad/INBOX
+SubFolders Verbatim
+
+Channel speigad
+Far :speigad-remote:
+Near :speigad-local:
+Patterns *
+Create Slave
+Sync All
+Expunge None
+SyncState *

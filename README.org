@@ -50,6 +50,8 @@ It also disables the startup and toolbar modes.
 #+name: Org Mode Appearance
 #+begin_src elisp
   (require 'org)
+  (unless (package-installed-p 'org-modern)
+    (package-install 'org-modern))
   (require 'org-modern)
   (add-hook 'org-mode-hook #'org-modern-mode)
 
@@ -154,7 +156,7 @@ It also disables the startup and toolbar modes.
   (require 'ob)
   (require 'ob-python)
   (unless (package-installed-p 'ess)
-    (package-install 'corfu))
+    (package-install 'ess))
   (require 'ess)
   (require 'ess-site)
   (require 'ob-R)
