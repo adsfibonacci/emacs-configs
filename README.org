@@ -16,7 +16,6 @@ This initializes the servers to install packages from. I use Elpa, Melpa, Melpa 
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
 
   (package-initialize)
-  (package-refresh-contents)
 #+end_src
 
 * Environment and Appearance
@@ -188,47 +187,13 @@ It also disables the startup and toolbar modes.
     (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 #+end_src
 
-#+name: Tramp-Testing
-#+begin_src elisp
-  (defun tramp-print-remote-pyenv-root ()
-    "Print PYENV_ROOT from remote host or local environment."
-    (interactive)
-    (let* ((dir default-directory)
-           (remote (file-remote-p dir))
-           (val
-            (if remote
-                (string-trim
-                 (with-temp-buffer
-                   (let ((default-directory dir))
-                     (process-file "sh" nil t nil "-lc" "echo \"$PYENV_ROOT\""))
-                   (buffer-string)))
-              (or (getenv "PYENV_ROOT")
-                  (expand-file-name "~/.pyenv")))))
-      (message "%s" (if (and val (not (string-empty-p val)))
-                        val
-                      "PYENV_ROOT is not set"))))
-
-  (defun tramp-get-pyenv-root ()
-    "Return PYENV_ROOT from remote host or local environment as a string."
-    (let* ((dir default-directory)
-           (remote (file-remote-p dir)))
-      (if remote
-          (string-trim
-           (with-temp-buffer
-             (let ((default-directory dir))
-               (process-file "sh" nil t nil "-lc" "echo \"$PYENV_ROOT\""))
-             (buffer-string)))
-        (or (getenv "PYENV_ROOT")
-            (expand-file-name "~/.pyenv")))))
-#+end_src
-
-
 * Shortcuts
 The remote shortcuts are untracked since they have sensitive information. This file needs to be copied manually. 
 #+name: Remote Shortcuts
 #+begin_src elisp
   (add-to-list 'load-path "~/.emacs.d/lisp/") 
   (require 'remote-shortcuts)
+  (require 'tramp-paths)
 #+end_src
 
 #+name: Global-Keybinds
@@ -357,47 +322,22 @@ In the local directories, it is able to automatically detect the proper pyrightc
     (package-install 'pyenv-mode))
   (require 'pyenv-mode)
   (pyenv-mode 1)
-#+end_src
 
-#+name: Pyright-Directory
-#+begin_src elisp
-  (defun pyenv-pyright ()
-    "Return pyright-langserver command from pyenv based on .python-version."
-    (let* ((root (locate-dominating-file default-directory ".python-version"))
-           (version (and root
-                         (string-trim
-                          (with-temp-buffer
-                            (insert-file-contents
-                             (expand-file-name ".python-version" root))
-                            (buffer-string)))))
-           (server (and version
-                        (expand-file-name
-                         (format "~/.pyenv/versions/%s/bin/pyright-langserver"
-                                 version)))))
-      (when (and server (file-executable-p server))
-        (list server "--stdio"))))  
-#+end_src
-
-
-#+name: Pylsp-Directory
-#+begin_src elisp
-(defun pyenv-pyright ()
-  "Return pyright-langserver command for local or TRAMP buffers."
-  (let* ((root (locate-dominating-file default-directory ".python-version"))
-         (version (and root
-                       (string-trim
-                        (with-temp-buffer
-                          (insert-file-contents
-                           (expand-file-name ".python-version" root))
-                          (buffer-string)))))
-         (home (expand-file-name "~" default-directory))
-         (server (and version
-                      (expand-file-name
-                       (format ".pyenv/versions/%s/bin/pyright-langserver"
-                               version)
-                       home))))
-    (when (and server (file-executable-p server))
-      (list server "--stdio"))))
+  (defun pyenv-version-path ()
+  "Return the path to the python executable in the current pyenv/virtualenv."
+  (interactive)
+  (let* ((v-name (if (and (boundp 'pyenv-mode-version) pyenv-mode-version)
+                     pyenv-mode-version
+                   (string-trim (shell-command-to-string "pyenv version-name"))))
+         (path (condition-case nil
+                   (let ((root (string-trim 
+                                (shell-command-to-string 
+                                 (concat "pyenv prefix " v-name)))))
+                     (concat root "/bin/python"))
+                 (error "python3"))))
+    (when (called-interactively-p 'interactive)
+      (message "Resolved Python: %s" path))
+    path))
 #+end_src
 
 #+name: Emacs IPython Notebooks
@@ -454,26 +394,36 @@ Not necessarily needed, but just to ensure portability
 
 #+name: Python-Eglot
 #+begin_src elisp
-  ;; Automatically start Eglot in Python buffers
-  (add-hook 'python-mode-hook #'eglot-ensure)
-  (add-hook 'python-ts-mode-hook #'eglot-ensure)
+  ;;  (defun eglot-python-contact (_)
+  ;;    "Find the pyright-langserver inside the current pyenv environment."
+  ;;    (let* ((python-path (pyenv-version-path))
+  ;;           (bin-dir (file-name-directory python-path))
+  ;;           ;; We look for the langserver specifically in the env's bin folder
+  ;;           (pyright-bin (expand-file-name "pyright-langserver" bin-dir)))
+  ;;      (if (file-executable-p pyright-bin)
+  ;;          (list pyright-bin "--stdio")
+  ;;        ;; Fallback to the shim/global if the env doesn't have it installed
+  ;;        '("pyright-langserver" "--stdio"))))
 
-(defun custom/eglot-pyright (_interactive)
-  "Return pyright command using pyenv root, TRAMP-aware."
-  (let* ((remote (file-remote-p default-directory))
-         (root (tramp-get-pyenv-root))
-         (full-root (if remote (concat remote root) root))
-         (exe (expand-file-name "shims/pyright-langserver" full-root)))
-    (message "[eglot] Using pyright at: %s" exe)
-    ;; Return the command list directly - NO eglot-alternatives
-    (list exe "--stdio")))
+  (defun eglot-python-contact (_)
+    "Find the pyright-langserver. 
+  If remote, return the remote-local path (without TRAMP prefix).
+  If local, return the absolute path."
+    (let* ((python-path (pyenv-version-path))
+         (bin-dir (file-name-directory python-path))
+         (pyright-bin (expand-file-name "pyright-langserver" bin-dir)))
+    ;; We use file-local-name to strip the "/ssh:user@host:" prefix 
+    ;; if it exists, because TRAMP process-start needs the remote-side path.
+    (list (file-local-name pyright-bin) "--stdio")))  
 
   (with-eval-after-load 'eglot
-            (add-to-list 'eglot-server-programs
-                         '(python-mode . custom/eglot-pyright))
-            (add-to-list 'eglot-server-programs
-                         '(python-ts-mode . custom/eglot-pyright)))
+    (setq-default eglot-server-programs
+                  (assq-delete-all 'python-mode eglot-server-programs))
+    (add-to-list 'eglot-server-programs `(python-mode . ,#'eglot-python-contact)))
+  
+  (add-hook 'python-mode-hook #'eglot-ensure)
 #+end_src
+
 
 #+name: C/C++-Eglot
 #+begin_src elisp
