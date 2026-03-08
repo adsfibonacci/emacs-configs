@@ -12,6 +12,7 @@ eln-cache/
 tramp
 .extensions/
 *.el~
+lisp/*
 lisp/remote-shortcuts.el
 lisp/mail.org
 .python-environments/
