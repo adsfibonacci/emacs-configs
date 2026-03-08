@@ -394,17 +394,6 @@ Not necessarily needed, but just to ensure portability
 
 #+name: Python-Eglot
 #+begin_src elisp
-  ;;  (defun eglot-python-contact (_)
-  ;;    "Find the pyright-langserver inside the current pyenv environment."
-  ;;    (let* ((python-path (pyenv-version-path))
-  ;;           (bin-dir (file-name-directory python-path))
-  ;;           ;; We look for the langserver specifically in the env's bin folder
-  ;;           (pyright-bin (expand-file-name "pyright-langserver" bin-dir)))
-  ;;      (if (file-executable-p pyright-bin)
-  ;;          (list pyright-bin "--stdio")
-  ;;        ;; Fallback to the shim/global if the env doesn't have it installed
-  ;;        '("pyright-langserver" "--stdio"))))
-
   (defun eglot-python-contact (_)
     "Find the pyright-langserver. 
   If remote, return the remote-local path (without TRAMP prefix).
