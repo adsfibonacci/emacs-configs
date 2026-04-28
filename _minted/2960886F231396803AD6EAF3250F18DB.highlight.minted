@@ -1,0 +1,11 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{unless}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}installed\PYGZhy{}p}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}dap\PYGZhy{}mode}\PYG{p}{)}
+\PYG{+w}{         }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}install}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}dap\PYGZhy{}mode}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}dap\PYGZhy{}gdb\PYGZhy{}lldb}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}dap\PYGZhy{}cpptools}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}dap\PYGZhy{}ui}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{dap\PYGZhy{}ui\PYGZhy{}mode}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{c+c1}{;; Optional: automatically enable DAP for C/C++ buffers}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}c++\PYGZhy{}mode\PYGZhy{}hook}\PYG{+w}{ }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{dap\PYGZhy{}mode}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}c\PYGZhy{}mode\PYGZhy{}hook}\PYG{+w}{ }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{dap\PYGZhy{}mode}\PYG{p}{)}
+\end{MintedVerbatim}

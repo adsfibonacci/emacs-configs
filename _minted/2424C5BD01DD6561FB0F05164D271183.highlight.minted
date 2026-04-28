@@ -1,0 +1,7 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nv}{global\PYGZhy{}set\PYGZhy{}key}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{kbd}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}C\PYGZhy{}h C\PYGZhy{}r\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}reload\PYGZhy{}init}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{global\PYGZhy{}set\PYGZhy{}key}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{kbd}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}M\PYGZhy{}s M\PYGZhy{}s\PYGZdq{}}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{(}\PYG{n+nb}{lambda}\PYG{+w}{ }\PYG{p}{()}
+\PYG{+w}{                  }\PYG{p}{(}\PYG{k}{interactive}\PYG{p}{)}
+\PYG{+w}{                  }\PYG{p}{(}\PYG{n+nv}{ansi\PYGZhy{}term}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{getenv}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}SHELL\PYGZdq{}}\PYG{p}{))))}
+\end{MintedVerbatim}

@@ -1,0 +1,11 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nv}{org\PYGZhy{}babel\PYGZhy{}do\PYGZhy{}load\PYGZhy{}languages}
+\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}org\PYGZhy{}babel\PYGZhy{}load\PYGZhy{}languages}
+\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{((}\PYG{n+nv}{emacs\PYGZhy{}lisp}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{+w}{   }\PYG{p}{(}\PYG{n+nv}{C}\PYG{+w}{          }\PYG{o}{.}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{+w}{   }\PYG{p}{(}\PYG{n+nv}{R}\PYG{+w}{          }\PYG{o}{.}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{+w}{   }\PYG{p}{(}\PYG{n+nv}{python}\PYG{+w}{     }\PYG{o}{.}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{+w}{   }\PYG{p}{(}\PYG{n+nv}{latex}\PYG{+w}{      }\PYG{o}{.}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{+w}{   }\PYG{p}{(}\PYG{n+nv}{shell}\PYG{+w}{      }\PYG{o}{.}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{+w}{   }\PYG{p}{(}\PYG{n+nv}{julia}\PYG{+w}{      }\PYG{o}{.}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)))}
+\end{MintedVerbatim}

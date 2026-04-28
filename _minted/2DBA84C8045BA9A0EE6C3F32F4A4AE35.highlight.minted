@@ -1,0 +1,19 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{eglot\PYGZhy{}python\PYGZhy{}contact}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{\PYGZus{}}\PYG{p}{)}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}Find the pyright\PYGZhy{}langserver.}
+\PYG{l+s}{If remote, return the remote\PYGZhy{}local path (without TRAMP prefix).}
+\PYG{l+s}{If local, return the absolute path.\PYGZdq{}}
+\PYG{+w}{  }\PYG{p}{(}\PYG{k}{let*}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{python\PYGZhy{}path}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{pyenv\PYGZhy{}version\PYGZhy{}path}\PYG{p}{))}
+\PYG{+w}{       }\PYG{p}{(}\PYG{n+nv}{bin\PYGZhy{}dir}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nf}{file\PYGZhy{}name\PYGZhy{}directory}\PYG{+w}{ }\PYG{n+nv}{python\PYGZhy{}path}\PYG{p}{))}
+\PYG{+w}{       }\PYG{p}{(}\PYG{n+nv}{pyright\PYGZhy{}bin}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nf}{expand\PYGZhy{}file\PYGZhy{}name}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}pyright\PYGZhy{}langserver\PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{bin\PYGZhy{}dir}\PYG{p}{)))}
+\PYG{+w}{  }\PYG{c+c1}{;; We use file\PYGZhy{}local\PYGZhy{}name to strip the \PYGZdq{}/ssh:user@host:\PYGZdq{} prefix}
+\PYG{+w}{  }\PYG{c+c1}{;; if it exists, because TRAMP process\PYGZhy{}start needs the remote\PYGZhy{}side path.}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nf}{list}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{file\PYGZhy{}local\PYGZhy{}name}\PYG{+w}{ }\PYG{n+nv}{pyright\PYGZhy{}bin}\PYG{p}{)}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZhy{}\PYGZhy{}stdio\PYGZdq{}}\PYG{p}{)))}
+
+\PYG{p}{(}\PYG{n+nb}{with\PYGZhy{}eval\PYGZhy{}after\PYGZhy{}load}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eglot}
+\PYG{+w}{  }\PYG{p}{(}\PYG{k}{setq\PYGZhy{}default}\PYG{+w}{ }\PYG{n+nv}{eglot\PYGZhy{}server\PYGZhy{}programs}
+\PYG{+w}{                }\PYG{p}{(}\PYG{n+nv}{assq\PYGZhy{}delete\PYGZhy{}all}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}python\PYGZhy{}mode}\PYG{+w}{ }\PYG{n+nv}{eglot\PYGZhy{}server\PYGZhy{}programs}\PYG{p}{))}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eglot\PYGZhy{}server\PYGZhy{}programs}\PYG{+w}{ }\PYG{o}{`}\PYG{p}{(}\PYG{n+nv}{python\PYGZhy{}mode}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{o}{,}\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{eglot\PYGZhy{}python\PYGZhy{}contact}\PYG{p}{)))}
+
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}python\PYGZhy{}mode\PYGZhy{}hook}\PYG{+w}{ }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{eglot\PYGZhy{}ensure}\PYG{p}{)}
+\end{MintedVerbatim}

@@ -1,0 +1,9 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}package}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}package\PYGZhy{}archives}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}elpa\PYGZdq{}}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}https://elpa.gnu.org/packages/\PYGZdq{}}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}package\PYGZhy{}archives}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}melpa\PYGZdq{}}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}https://stable.melpa.org/packages/\PYGZdq{}}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}package\PYGZhy{}archives}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}melpa\PYGZhy{}devel\PYGZdq{}}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}https://melpa.org/packages/\PYGZdq{}}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}package\PYGZhy{}archives}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}org\PYGZdq{}}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}https://orgmode.org/elpa/\PYGZdq{}}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}initialize}\PYG{p}{)}
+\end{MintedVerbatim}

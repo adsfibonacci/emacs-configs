@@ -1,0 +1,7 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{ein:jupyter\PYGZhy{}default\PYGZhy{}server\PYGZhy{}command}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nb}{lambda}\PYG{+w}{ }\PYG{p}{()}
+\PYG{+w}{      }\PYG{p}{(}\PYG{n+nf}{expand\PYGZhy{}file\PYGZhy{}name}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}bin/jupyter\PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{pyvenv\PYGZhy{}virtual\PYGZhy{}env}\PYG{p}{)))}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}auto\PYGZhy{}mode\PYGZhy{}alist}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZbs{}.ipynb\PYGZbs{}\PYGZbs{}\PYGZsq{}\PYGZdq{}}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{n+nv}{ein:notebook\PYGZhy{}mode}\PYG{p}{))}
+\end{MintedVerbatim}

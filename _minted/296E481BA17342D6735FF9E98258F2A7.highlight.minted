@@ -1,0 +1,17 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{unless}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}installed\PYGZhy{}p}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}corfu}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}install}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}corfu}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}corfu}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}corfu\PYGZhy{}popupinfo}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{global\PYGZhy{}corfu\PYGZhy{}mode}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{corfu\PYGZhy{}auto}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{corfu\PYGZhy{}cycle}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{corfu\PYGZhy{}quit\PYGZhy{}no\PYGZhy{}match}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}seperator}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{corfu\PYGZhy{}auto\PYGZhy{}delay}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{corfu\PYGZhy{}auto\PYGZhy{}prefix}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nf}{define\PYGZhy{}key}\PYG{+w}{ }\PYG{n+nv}{corfu\PYGZhy{}map}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{kbd}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}TAB\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}corfu\PYGZhy{}next}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nf}{define\PYGZhy{}key}\PYG{+w}{ }\PYG{n+nv}{corfu\PYGZhy{}map}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{kbd}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZlt{}tab\PYGZgt{}\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}corfu\PYGZhy{}next}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nf}{define\PYGZhy{}key}\PYG{+w}{ }\PYG{n+nv}{corfu\PYGZhy{}map}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{kbd}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}S\PYGZhy{}TAB\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}corfu\PYGZhy{}next}\PYG{p}{)}
+\end{MintedVerbatim}

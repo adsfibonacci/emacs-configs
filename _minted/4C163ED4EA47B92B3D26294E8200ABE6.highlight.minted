@@ -1,0 +1,13 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{flymake\PYGZhy{}diagnostic\PYGZhy{}functions}
+\PYG{+w}{      }\PYG{p}{(}\PYG{n+nv}{remove}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}flymake\PYGZhy{}cc}\PYG{+w}{ }\PYG{n+nv}{flymake\PYGZhy{}diagnostic\PYGZhy{}functions}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}c\PYGZhy{}mode\PYGZhy{}hook}
+\PYG{+w}{          }\PYG{p}{(}\PYG{n+nb}{lambda}\PYG{+w}{ }\PYG{p}{()}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n+nb}{setq\PYGZhy{}local}\PYG{+w}{ }\PYG{n+nv}{flymake\PYGZhy{}diagnostic\PYGZhy{}functions}\PYG{+w}{ }\PYG{n+no}{nil}\PYG{p}{)))}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}c++\PYGZhy{}mode\PYGZhy{}hook}
+\PYG{+w}{          }\PYG{p}{(}\PYG{n+nb}{lambda}\PYG{+w}{ }\PYG{p}{()}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n+nb}{setq\PYGZhy{}local}\PYG{+w}{ }\PYG{n+nv}{flymake\PYGZhy{}diagnostic\PYGZhy{}functions}\PYG{+w}{ }\PYG{n+no}{nil}\PYG{p}{)))}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}python\PYGZhy{}mode\PYGZhy{}hook}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nb}{lambda}\PYG{+w}{ }\PYG{p}{()}
+\PYG{+w}{          }\PYG{p}{(}\PYG{n+nb}{setq\PYGZhy{}local}\PYG{+w}{ }\PYG{n+nv}{flymake\PYGZhy{}diagnostic\PYGZhy{}functions}\PYG{+w}{ }\PYG{n+no}{nil}\PYG{p}{)))}
+\end{MintedVerbatim}

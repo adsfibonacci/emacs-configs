@@ -1,0 +1,21 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{unless}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}installed\PYGZhy{}p}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}treemacs}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}install}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}treemacs}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nb}{unless}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}installed\PYGZhy{}p}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}s}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}install}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}s}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}treemacs}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}s}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nb}{with\PYGZhy{}eval\PYGZhy{}after\PYGZhy{}load}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}treemacs}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{treemacs\PYGZhy{}custom\PYGZhy{}filter}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{file}\PYG{+w}{ }\PYG{n+nv}{\PYGZus{}}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{k}{or}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{s\PYGZhy{}ends\PYGZhy{}with?}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}.aux\PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{file}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nv}{s\PYGZhy{}ends\PYGZhy{}with?}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}.log\PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{file}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nv}{s\PYGZhy{}ends\PYGZhy{}with?}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}.o\PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{file}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nv}{s\PYGZhy{}ends\PYGZhy{}with?}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}.pyc\PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{file}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nv}{s\PYGZhy{}ends\PYGZhy{}with?}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}.bak\PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{file}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nv}{s\PYGZhy{}ends\PYGZhy{}with?}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZti{}\PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{file}\PYG{p}{)))}
+
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}treemacs\PYGZhy{}ignored\PYGZhy{}file\PYGZhy{}predicates}
+\PYG{+w}{               }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{treemacs\PYGZhy{}custom\PYGZhy{}filter}\PYG{p}{))}
+\end{MintedVerbatim}

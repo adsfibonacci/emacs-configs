@@ -1,0 +1,13 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}c\PYGZhy{}mode\PYGZhy{}hook}\PYG{+w}{ }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{eglot\PYGZhy{}ensure}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}c++\PYGZhy{}mode\PYGZhy{}hook}\PYG{+w}{ }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{eglot\PYGZhy{}ensure}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nb}{with\PYGZhy{}eval\PYGZhy{}after\PYGZhy{}load}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eglot}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eglot\PYGZhy{}server\PYGZhy{}programs}
+\PYG{+w}{               }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{c++\PYGZhy{}mode}
+\PYG{+w}{                 }\PYG{o}{.}\PYG{+w}{ }\PYG{p}{(}\PYG{l+s}{\PYGZdq{}clangd\PYGZdq{}}\PYG{p}{)))}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eglot\PYGZhy{}server\PYGZhy{}programs}
+\PYG{+w}{               }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{c\PYGZhy{}mode}
+\PYG{+w}{                 }\PYG{o}{.}\PYG{+w}{ }\PYG{p}{(}\PYG{l+s}{\PYGZdq{}clangd\PYGZdq{}}\PYG{p}{)))}
+\PYG{+w}{  }\PYG{p}{)}
+\end{MintedVerbatim}

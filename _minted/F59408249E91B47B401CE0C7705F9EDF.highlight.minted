@@ -1,0 +1,10 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{unless}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}installed\PYGZhy{}p}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}imenu\PYGZhy{}list}\PYG{p}{)}
+\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}install}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}imenu\PYGZhy{}list}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}imenu\PYGZhy{}list}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{imenu\PYGZhy{}list\PYGZhy{}focus\PYGZhy{}after\PYGZhy{}activation}\PYG{+w}{ }\PYG{n+no}{t}
+\PYG{+w}{      }\PYG{n+nv}{imenu\PYGZhy{}list\PYGZhy{}auto\PYGZhy{}resize}\PYG{+w}{ }\PYG{n+no}{t}
+\PYG{+w}{      }\PYG{n+nv}{imenu\PYGZhy{}list\PYGZhy{}size}\PYG{+w}{ }\PYG{l+m+mi}{30}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{global\PYGZhy{}set\PYGZhy{}key}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{kbd}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}C\PYGZhy{}c i\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{imenu\PYGZhy{}list\PYGZhy{}smart\PYGZhy{}toggle}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}prog\PYGZhy{}mode\PYGZhy{}hook}\PYG{+w}{ }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{outline\PYGZhy{}minor\PYGZhy{}mode}\PYG{p}{)}
+\end{MintedVerbatim}

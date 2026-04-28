@@ -1,0 +1,22 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{debug\PYGZhy{}on\PYGZhy{}error}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{;; Debug on Errors}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{image\PYGZhy{}auto\PYGZhy{}resize}\PYG{+w}{ }\PYG{n+no}{nil}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{;; Resize Images}
+
+\PYG{p}{(}\PYG{k}{setq\PYGZhy{}default}\PYG{+w}{ }\PYG{n+nv}{indent\PYGZhy{}tabs\PYGZhy{}mode}\PYG{+w}{ }\PYG{n+no}{nil}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{;; Set Default Tab to Two Spaces}
+\PYG{p}{(}\PYG{k}{setq\PYGZhy{}default}\PYG{+w}{ }\PYG{n+nv}{tab\PYGZhy{}width}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}default\PYGZhy{}frame\PYGZhy{}alist}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{foreground\PYGZhy{}color}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZsh{}FFFFFF\PYGZdq{}}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{;; Background}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}default\PYGZhy{}frame\PYGZhy{}alist}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{background\PYGZhy{}color}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZsh{}000000\PYGZdq{}}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{;; Foreground}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}default\PYGZhy{}frame\PYGZhy{}alist}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{fullscreen}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{n+nv}{maximized}\PYG{p}{))}\PYG{+w}{ }\PYG{c+c1}{;; Start Maximized}
+
+\PYG{p}{(}\PYG{n+nv}{set\PYGZhy{}frame\PYGZhy{}parameter}\PYG{+w}{ }\PYG{n+no}{nil}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}alpha\PYGZhy{}background}\PYG{+w}{ }\PYG{l+m+mi}{100}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}default\PYGZhy{}frame\PYGZhy{}alist}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{alpha\PYGZhy{}background}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{l+m+mi}{100}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nv}{menu\PYGZhy{}bar\PYGZhy{}mode}\PYG{+w}{ }\PYG{l+m+mi}{\PYGZhy{}1}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{scroll\PYGZhy{}bar\PYGZhy{}mode}\PYG{+w}{ }\PYG{l+m+mi}{\PYGZhy{}1}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{tool\PYGZhy{}bar\PYGZhy{}mode}\PYG{+w}{ }\PYG{l+m+mi}{\PYGZhy{}1}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{set\PYGZhy{}face\PYGZhy{}attribute}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}default}\PYG{+w}{ }\PYG{n+no}{nil}\PYG{+w}{ }\PYG{n+nb}{:font}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Noto Sans Mono\PYGZdq{}}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nf}{set\PYGZhy{}fontset\PYGZhy{}font}\PYG{+w}{ }\PYG{n+no}{t}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}unicode}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nf}{font\PYGZhy{}spec}\PYG{+w}{ }\PYG{n+nb}{:family}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Noto Color Emoji\PYGZdq{}}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nv}{set\PYGZhy{}face\PYGZhy{}foreground}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}font\PYGZhy{}lock\PYGZhy{}comment\PYGZhy{}face}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZsh{}C28aa1\PYGZdq{}}\PYG{p}{)}
+\end{MintedVerbatim}

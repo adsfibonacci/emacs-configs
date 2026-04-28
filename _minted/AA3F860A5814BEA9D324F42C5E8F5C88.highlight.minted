@@ -1,0 +1,22 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{unless}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}installed\PYGZhy{}p}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}pyenv\PYGZhy{}mode}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}install}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}pyenv\PYGZhy{}mode}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}pyenv\PYGZhy{}mode}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{pyenv\PYGZhy{}mode}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{pyenv\PYGZhy{}version\PYGZhy{}path}\PYG{+w}{ }\PYG{p}{()}
+\PYG{l+s}{\PYGZdq{}Return the path to the python executable in the current pyenv/virtualenv.\PYGZdq{}}
+\PYG{p}{(}\PYG{k}{interactive}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{let*}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{v\PYGZhy{}name}\PYG{+w}{ }\PYG{p}{(}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{k}{and}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nf}{boundp}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}pyenv\PYGZhy{}mode\PYGZhy{}version}\PYG{p}{)}\PYG{+w}{ }\PYG{n+nv}{pyenv\PYGZhy{}mode\PYGZhy{}version}\PYG{p}{)}
+\PYG{+w}{                   }\PYG{n+nv}{pyenv\PYGZhy{}mode\PYGZhy{}version}
+\PYG{+w}{                 }\PYG{p}{(}\PYG{n+nv}{string\PYGZhy{}trim}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{shell\PYGZhy{}command\PYGZhy{}to\PYGZhy{}string}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}pyenv version\PYGZhy{}name\PYGZdq{}}\PYG{p}{))))}
+\PYG{+w}{       }\PYG{p}{(}\PYG{n+nv}{path}\PYG{+w}{ }\PYG{p}{(}\PYG{k}{condition\PYGZhy{}case}\PYG{+w}{ }\PYG{n+no}{nil}
+\PYG{+w}{                 }\PYG{p}{(}\PYG{k}{let}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{root}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{string\PYGZhy{}trim}
+\PYG{+w}{                              }\PYG{p}{(}\PYG{n+nv}{shell\PYGZhy{}command\PYGZhy{}to\PYGZhy{}string}
+\PYG{+w}{                               }\PYG{p}{(}\PYG{n+nf}{concat}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}pyenv prefix \PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{v\PYGZhy{}name}\PYG{p}{)))))}
+\PYG{+w}{                   }\PYG{p}{(}\PYG{n+nf}{concat}\PYG{+w}{ }\PYG{n+nv}{root}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}/bin/python\PYGZdq{}}\PYG{p}{))}
+\PYG{+w}{               }\PYG{p}{(}\PYG{n+ne}{error}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}python3\PYGZdq{}}\PYG{p}{))))}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nb}{when}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{called\PYGZhy{}interactively\PYGZhy{}p}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}interactive}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nf}{message}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Resolved Python: \PYGZpc{}s\PYGZdq{}}\PYG{+w}{ }\PYG{n+nv}{path}\PYG{p}{))}
+\PYG{+w}{  }\PYG{n+nv}{path}\PYG{p}{))}
+\end{MintedVerbatim}

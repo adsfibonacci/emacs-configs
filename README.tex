@@ -1,0 +1,489 @@
+% Created 2026-04-18 Sat 14:02
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\author{Alex Speigle}
+\date{\today}
+\title{Literate Emacs Loading}
+\hypersetup{
+ pdfauthor={Alex Speigle},
+ pdftitle={Literate Emacs Loading},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 30.2 (Org mode 9.7.11)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Package Initialization}
+\label{sec:org1b5e055}
+This initializes the servers to install packages from. I use Elpa, Melpa, Melpa Development, and Org Elpa. 
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(require 'package)
+(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-devel" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+
+(package-initialize)
+\end{minted}
+\section{Environment and Appearance}
+\label{sec:org9b30526}
+\subsection{Appearance}
+\label{sec:org3b6c8eb}
+This customizes the appearance of the raw emacs look.
+It modifies the fore/back ground, the text, fonts, and comments.
+It also disables the startup and toolbar modes. 
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(setq debug-on-error t) ;; Debug on Errors
+(setq image-auto-resize nil) ;; Resize Images
+
+(setq-default indent-tabs-mode nil) ;; Set Default Tab to Two Spaces
+(setq-default tab-width 2)
+
+(add-to-list 'default-frame-alist '(foreground-color . "#FFFFFF")) ;; Background
+(add-to-list 'default-frame-alist '(background-color . "#000000")) ;; Foreground
+(add-to-list 'default-frame-alist '(fullscreen . maximized)) ;; Start Maximized
+
+(set-frame-parameter nil 'alpha-background 100)
+(add-to-list 'default-frame-alist '(alpha-background . 100))
+
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+
+(set-face-attribute 'default nil :font "Noto Sans Mono")
+(set-fontset-font t 'unicode (font-spec :family "Noto Color Emoji"))
+(set-face-foreground 'font-lock-comment-face "#C28aa1")
+\end{minted}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(require 'org)
+(unless (package-installed-p 'org-modern)
+  (package-install 'org-modern))
+(require 'org-modern)
+(add-hook 'org-mode-hook #'org-modern-mode)
+
+(setq org-hide-emphasis-markers t)
+(setq org-confirm-babel-evaluate nil)
+(setq org-hide-keywords t)
+
+(custom-set-faces
+ '(org-block
+   (
+    (t
+     (:background "#0a0017" :foreground "white" :weight normal)
+     ))))
+\end{minted}
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(require 'ansi-color)
+
+(defun org-babel-strip-ansi ()
+  (when (org-in-src-block-p)
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(add-hook 'org-babel-after-execute-hook #'org-babel-strip-ansi)
+\end{minted}
+\subsection{Environment}
+\label{sec:org2bc6a03}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(setq inhibit-startup-screen t)
+(setq backup-directory-alist `(("." . ,"~/.emacs.d/.backups")))
+(setq make-backup-files t)
+(setq backup-by-copying t)
+(setq version-control t)
+(setq delete-old-versions t)
+(setq delete-by-moving-to-trash t)
+(setq kept-old-versions 5)
+(setq kept-new-versions 10)
+(setq auto-save-default t)
+(setq auto-save-timeout 20)
+(setq auto-save-interval 200)
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(global-auto-revert-mode 1) ;; Refresh Buffers on Change
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-rever-verbose nil)
+
+(add-to-list 'display-buffer-alist '("\\*Buffer List\\*" (display-buffer-same-window)))
+
+
+;; Open Ansi-Term as Default Terminal Emulator
+(defun open-ansi-term-here (dir) "Open an ansi-term in DIR."
+       (let (
+             (default-directory
+              (file-name-as-directory
+               (expand-file-name dir))))
+         (ansi-term (getenv "SHELL")))) 
+
+;; Reload the Init File
+(defun reload-init ()
+  "Reloading Emacs Init"
+  (interactive)
+  (load-file user-init-file))
+
+(defun ensure-package-and-require (pkg)
+  "Install PKG if it isn't installed, then require it."
+  (unless (package-installed-p pkg)
+    (package-install pkg))
+  (require pkg))
+
+(add-hook 'emacs-startup-hook (lambda () (interactive) (ansi-term (getenv "SHELL"))))
+\end{minted}
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(with-eval-after-load 'org
+(setq org-preview-latex-process-alist
+      '((dvipng :programs ("latex" "dvipng")
+                :description "dvi > png"
+                :message "you need to install the programs: latex and dvipng."
+                :use-xcolor t
+                :image-input-type "dvi"
+                :image-output-type "png"
+                :image-size-adjust (1.0 . 1.0)
+                :latex-compiler ("latex -interaction nonstopmode -output-directory %o %f")
+                :image-converter ("dvipng -D %D -T tight -o %O %f")))))
+
+(setq org-latex-listings 'minted)
+(setq org-latex-packages-alist '(("" "minted")))
+(setq org-latex-minted-options
+      '(("breaklines" "true")
+        ("fontsize" "\\scriptsize")
+        ("frame" "single")))
+\end{minted}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(add-hook 'org-mode-hook #'hs-minor-mode)
+(add-hook 'org-mode-hook #'yas-minor-mode)
+\end{minted}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(require 'ob)
+(require 'ob-python)
+(unless (package-installed-p 'ess)
+  (package-install 'ess))
+(require 'ess)
+(require 'ess-site)
+(require 'ob-R)
+(require 'ob-julia)
+\end{minted}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (C          . t)
+   (R          . t)
+   (python     . t)
+   (latex      . t)
+   (shell      . t)
+   (julia      . t)))
+\end{minted}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'exec-path-from-shell)
+  (package-install 'exec-path-from-shell))
+(require 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
+\end{minted}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(require 'tramp)
+(with-eval-after-load 'tramp
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+\end{minted}
+\section{Shortcuts}
+\label{sec:orgbf7d273}
+The remote shortcuts are untracked since they have sensitive information. This file needs to be copied manually. 
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(add-to-list 'load-path "~/.emacs.d/lisp/") 
+(require 'remote-shortcuts)
+(require 'tramp-paths)
+\end{minted}
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(global-set-key (kbd "C-h C-r") 'reload-init)
+(global-set-key (kbd "M-s M-s")
+                (lambda ()
+                  (interactive)
+                  (ansi-term (getenv "SHELL"))))
+\end{minted}
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-c C-v") 'compile)))
+\end{minted}
+
+
+Enable the snippet shortcuts everywhere 
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'yasnippet)
+  (package-install 'yasnippet))
+(require 'yasnippet)
+(yas-global-mode 1)
+\end{minted}
+\section{Plugins}
+\label{sec:org5496b10}
+
+\subsection{Magit}
+\label{sec:orgc1f61f2}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'magit)
+  (package-install 'magit))
+(require 'magit)
+(setq magit-diff-refine-hunk 'all)
+(global-auto-revert-mode 1)
+\end{minted}
+\subsection{Treemacs}
+\label{sec:orge42b452}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+;; Prevent Treemacs from trying to load magit-bookmark
+(with-eval-after-load 'treemacs-bookmarks
+  (define-minor-mode treemacs--dummy-magit-bookmark-mode
+    "Dummy mode to satisfy Treemacs bookmark requirement."))
+
+(provide 'magit-bookmark)  ;; pretend the feature exists
+\end{minted}
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'treemacs)
+  (package-install 'treemacs))
+(unless (package-installed-p 's)
+  (package-install 's))
+
+(require 'treemacs)
+(require 's)
+
+(with-eval-after-load 'treemacs
+  (defun treemacs-custom-filter (file _)
+    (or (s-ends-with? ".aux" file)
+        (s-ends-with? ".log" file)
+        (s-ends-with? ".o" file)
+        (s-ends-with? ".pyc" file)
+        (s-ends-with? ".bak" file)
+        (s-ends-with? "~" file)))
+
+  (add-to-list 'treemacs-ignored-file-predicates
+               #'treemacs-custom-filter))
+\end{minted}
+\subsection{Projectile}
+\label{sec:orga98df30}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'projectile)
+  (package-install 'projectile))
+
+(require 'projectile)
+\end{minted}
+\section{Programming}
+\label{sec:orge4748c8}
+\subsection{General}
+\label{sec:org7802dbd}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+\end{minted}
+
+Flymake is not needed since I am using Eglot and LSP servers.
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(setq flymake-diagnostic-functions
+      (remove 'flymake-cc flymake-diagnostic-functions))
+(add-hook 'c-mode-hook
+          (lambda ()
+            (setq-local flymake-diagnostic-functions nil)))
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (setq-local flymake-diagnostic-functions nil)))
+(add-hook 'python-mode-hook
+        (lambda ()
+          (setq-local flymake-diagnostic-functions nil)))
+\end{minted}
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'imenu-list)
+ (package-install 'imenu-list))
+(require 'imenu-list)
+(setq imenu-list-focus-after-activation t
+      imenu-list-auto-resize t
+      imenu-list-size 30)
+(global-set-key (kbd "C-c i") #'imenu-list-smart-toggle)
+(add-hook 'prog-mode-hook #'outline-minor-mode)
+\end{minted}
+\subsection{Python}
+\label{sec:org8ee049b}
+This activates the Emacs communication with Pyenv Virtualenv.
+In the local directories, it is able to automatically detect the proper pyrightconfig.json file, and use the server installed in the corresponding environment.
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'pyenv-mode)
+  (package-install 'pyenv-mode))
+(require 'pyenv-mode)
+(pyenv-mode 1)
+
+(defun pyenv-version-path ()
+"Return the path to the python executable in the current pyenv/virtualenv."
+(interactive)
+(let* ((v-name (if (and (boundp 'pyenv-mode-version) pyenv-mode-version)
+                   pyenv-mode-version
+                 (string-trim (shell-command-to-string "pyenv version-name"))))
+       (path (condition-case nil
+                 (let ((root (string-trim 
+                              (shell-command-to-string 
+                               (concat "pyenv prefix " v-name)))))
+                   (concat root "/bin/python"))
+               (error "python3"))))
+  (when (called-interactively-p 'interactive)
+    (message "Resolved Python: %s" path))
+  path))
+\end{minted}
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'ein)
+  (package-install 'ein))
+
+(require 'ein)
+(setq ein:jupyter-server-command
+      "~/.pyenv/versions/jupyter/bin/jupyter")
+(add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:notebook-mode))
+\end{minted}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+
+(setq ein:jupyter-default-server-command
+    (lambda ()
+      (expand-file-name "bin/jupyter" pyvenv-virtual-env)))
+(add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:notebook-mode))  
+\end{minted}
+\subsection{C/C++}
+\label{sec:org95d8635}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'dap-mode)
+         (package-install 'dap-mode))
+(require 'dap-gdb-lldb)
+(require 'dap-cpptools)
+(require 'dap-ui)
+(dap-ui-mode 1)
+;; Optional: automatically enable DAP for C/C++ buffers
+(add-hook 'c++-mode-hook #'dap-mode)
+(add-hook 'c-mode-hook #'dap-mode)
+\end{minted}
+\subsection{Julia}
+\label{sec:orgb2aa860}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'julia-mode)
+  (package-install 'julia-mode))
+(require 'julia-mode)  
+\end{minted}
+\subsection{R}
+\label{sec:orgad9484d}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(with-eval-after-load 'ob-R
+  (setq org-babel-R-command
+        "R --slave --no-save --no-restore -e \"options(repos=c(CRAN='https://cloud.r-project.org'))\""))
+
+(with-eval-after-load 'ess-r-mode
+  (setq ess-r-command
+        "R --slave --no-save --no-restore -e \"options(repos=c(CRAN='https://cloud.r-project.org'))\""))  
+\end{minted}
+\subsection{Eglot}
+\label{sec:org94d3261}
+Not necessarily needed, but just to ensure portability
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(require 'eglot)
+(setq eglot-events-buffer-size 10000000)
+(setq eglot-report-progress t)
+\end{minted}
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(defun eglot-python-contact (_)
+  "Find the pyright-langserver. 
+If remote, return the remote-local path (without TRAMP prefix).
+If local, return the absolute path."
+  (let* ((python-path (pyenv-version-path))
+       (bin-dir (file-name-directory python-path))
+       (pyright-bin (expand-file-name "pyright-langserver" bin-dir)))
+  ;; We use file-local-name to strip the "/ssh:user@host:" prefix 
+  ;; if it exists, because TRAMP process-start needs the remote-side path.
+  (list (file-local-name pyright-bin) "--stdio")))  
+
+(with-eval-after-load 'eglot
+  (setq-default eglot-server-programs
+                (assq-delete-all 'python-mode eglot-server-programs))
+  (add-to-list 'eglot-server-programs `(python-mode . ,#'eglot-python-contact)))
+
+(add-hook 'python-mode-hook #'eglot-ensure)
+\end{minted}
+
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(add-hook 'c-mode-hook #'eglot-ensure)
+(add-hook 'c++-mode-hook #'eglot-ensure)
+
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(c++-mode
+                 . ("clangd")))
+  (add-to-list 'eglot-server-programs
+               '(c-mode
+                 . ("clangd")))
+  )
+\end{minted}
+
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(add-hook 'julia-mode-hook #'eglot-ensure)
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+             '(julia-mode .
+               ("julia" "--startup-file=no" "--history-file=no"
+                "-e"
+                "using LanguageServer, SymbolServer;
+                 depot_path = get(ENV, \"JULIA_DEPOT_PATH\", \"\");
+                 project_path = Base.current_project();
+                 server = LanguageServer.LanguageServerInstance(
+                     stdin, stdout, project_path, depot_path);
+                 run(server);")))
+  )
+\end{minted}
+\subsection{Corfu}
+\label{sec:org5390e43}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'corfu)
+  (package-install 'corfu))
+(require 'corfu)
+(require 'corfu-popupinfo)
+
+(global-corfu-mode 1)
+(setq corfu-auto t)
+(setq corfu-cycle t)
+(setq corfu-quit-no-match 'seperator)
+(setq corfu-auto-delay 0)
+(setq corfu-auto-prefix 1)
+
+(define-key corfu-map (kbd "TAB") 'corfu-next)
+(define-key corfu-map (kbd "<tab>") 'corfu-next)
+(define-key corfu-map (kbd "S-TAB") 'corfu-next)  
+\end{minted}
+\subsection{Eldoc}
+\label{sec:org29e4b8d}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(unless (package-installed-p 'eldoc-box)
+  (package-install 'eldoc-box))
+(require 'eldoc-box)
+(add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode)
+
+(setq eldoc-documentation-strategy 'eldoc-documentation-compose)
+(setq eldoc-box-max-pixel-width 500)
+(setq eldoc-box-max-pixel-height 400)
+\end{minted}
+\section{Conclusion}
+\label{sec:org91a4ed3}
+\begin{minted}[breaklines=true,fontsize=\scriptsize,frame=single]{elisp}
+(provide 'init)
+\end{minted}
+\end{document}

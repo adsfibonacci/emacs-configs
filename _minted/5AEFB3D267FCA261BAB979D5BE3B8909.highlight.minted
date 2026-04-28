@@ -1,0 +1,44 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{inhibit\PYGZhy{}startup\PYGZhy{}screen}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{backup\PYGZhy{}directory\PYGZhy{}alist}\PYG{+w}{ }\PYG{o}{`}\PYG{p}{((}\PYG{l+s}{\PYGZdq{}.\PYGZdq{}}\PYG{+w}{ }\PYG{o}{.}\PYG{+w}{ }\PYG{o}{,}\PYG{l+s}{\PYGZdq{}\PYGZti{}/.emacs.d/.backups\PYGZdq{}}\PYG{p}{)))}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{make\PYGZhy{}backup\PYGZhy{}files}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{backup\PYGZhy{}by\PYGZhy{}copying}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{version\PYGZhy{}control}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{delete\PYGZhy{}old\PYGZhy{}versions}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{delete\PYGZhy{}by\PYGZhy{}moving\PYGZhy{}to\PYGZhy{}trash}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{kept\PYGZhy{}old\PYGZhy{}versions}\PYG{+w}{ }\PYG{l+m+mi}{5}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{kept\PYGZhy{}new\PYGZhy{}versions}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{auto\PYGZhy{}save\PYGZhy{}default}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{auto\PYGZhy{}save\PYGZhy{}timeout}\PYG{+w}{ }\PYG{l+m+mi}{20}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{auto\PYGZhy{}save\PYGZhy{}interval}\PYG{+w}{ }\PYG{l+m+mi}{200}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nb}{defalias}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}yes\PYGZhy{}or\PYGZhy{}no\PYGZhy{}p}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}y\PYGZhy{}or\PYGZhy{}n\PYGZhy{}p}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{global\PYGZhy{}auto\PYGZhy{}revert\PYGZhy{}mode}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{c+c1}{;; Refresh Buffers on Change}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{global\PYGZhy{}auto\PYGZhy{}revert\PYGZhy{}non\PYGZhy{}file\PYGZhy{}buffers}\PYG{+w}{ }\PYG{n+no}{t}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{auto\PYGZhy{}rever\PYGZhy{}verbose}\PYG{+w}{ }\PYG{n+no}{nil}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}display\PYGZhy{}buffer\PYGZhy{}alist}\PYG{+w}{ }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZbs{}*Buffer List\PYGZbs{}\PYGZbs{}*\PYGZdq{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{display\PYGZhy{}buffer\PYGZhy{}same\PYGZhy{}window}\PYG{p}{)))}
+
+
+\PYG{c+c1}{;; Open Ansi\PYGZhy{}Term as Default Terminal Emulator}
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{open\PYGZhy{}ansi\PYGZhy{}term\PYGZhy{}here}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{dir}\PYG{p}{)}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Open an ansi\PYGZhy{}term in DIR.\PYGZdq{}}
+\PYG{+w}{       }\PYG{p}{(}\PYG{k}{let}\PYG{+w}{ }\PYG{p}{(}
+\PYG{+w}{             }\PYG{p}{(}\PYG{n+nv}{default\PYGZhy{}directory}
+\PYG{+w}{              }\PYG{p}{(}\PYG{n+nf}{file\PYGZhy{}name\PYGZhy{}as\PYGZhy{}directory}
+\PYG{+w}{               }\PYG{p}{(}\PYG{n+nf}{expand\PYGZhy{}file\PYGZhy{}name}\PYG{+w}{ }\PYG{n+nv}{dir}\PYG{p}{))))}
+\PYG{+w}{         }\PYG{p}{(}\PYG{n+nv}{ansi\PYGZhy{}term}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{getenv}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}SHELL\PYGZdq{}}\PYG{p}{))))}
+
+\PYG{c+c1}{;; Reload the Init File}
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{reload\PYGZhy{}init}\PYG{+w}{ }\PYG{p}{()}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}Reloading Emacs Init\PYGZdq{}}
+\PYG{+w}{  }\PYG{p}{(}\PYG{k}{interactive}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{load\PYGZhy{}file}\PYG{+w}{ }\PYG{n+nv}{user\PYGZhy{}init\PYGZhy{}file}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{ensure\PYGZhy{}package\PYGZhy{}and\PYGZhy{}require}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{pkg}\PYG{p}{)}
+\PYG{+w}{  }\PYG{l+s}{\PYGZdq{}Install PKG if it isn\PYGZsq{}t installed, then require it.\PYGZdq{}}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nb}{unless}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}installed\PYGZhy{}p}\PYG{+w}{ }\PYG{n+nv}{pkg}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}install}\PYG{+w}{ }\PYG{n+nv}{pkg}\PYG{p}{))}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{n+nv}{pkg}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}emacs\PYGZhy{}startup\PYGZhy{}hook}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{lambda}\PYG{+w}{ }\PYG{p}{()}\PYG{+w}{ }\PYG{p}{(}\PYG{k}{interactive}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{ansi\PYGZhy{}term}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{getenv}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}SHELL\PYGZdq{}}\PYG{p}{))))}
+\end{MintedVerbatim}

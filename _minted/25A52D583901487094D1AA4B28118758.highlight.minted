@@ -1,0 +1,5 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}c++\PYGZhy{}mode\PYGZhy{}hook}
+\PYG{+w}{          }\PYG{p}{(}\PYG{n+nb}{lambda}\PYG{+w}{ }\PYG{p}{()}
+\PYG{+w}{            }\PYG{p}{(}\PYG{n+nv}{local\PYGZhy{}set\PYGZhy{}key}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{kbd}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}C\PYGZhy{}c C\PYGZhy{}v\PYGZdq{}}\PYG{p}{)}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}compile}\PYG{p}{)))}
+\end{MintedVerbatim}

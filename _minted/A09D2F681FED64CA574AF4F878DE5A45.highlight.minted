@@ -1,0 +1,9 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{with\PYGZhy{}eval\PYGZhy{}after\PYGZhy{}load}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}ob\PYGZhy{}R}
+\PYG{+w}{  }\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{org\PYGZhy{}babel\PYGZhy{}R\PYGZhy{}command}
+\PYG{+w}{        }\PYG{l+s}{\PYGZdq{}R \PYGZhy{}\PYGZhy{}slave \PYGZhy{}\PYGZhy{}no\PYGZhy{}save \PYGZhy{}\PYGZhy{}no\PYGZhy{}restore \PYGZhy{}e \PYGZbs{}\PYGZdq{}options(repos=c(CRAN=\PYGZsq{}https://cloud.r\PYGZhy{}project.org\PYGZsq{}))\PYGZbs{}\PYGZdq{}\PYGZdq{}}\PYG{p}{))}
+
+\PYG{p}{(}\PYG{n+nb}{with\PYGZhy{}eval\PYGZhy{}after\PYGZhy{}load}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}ess\PYGZhy{}r\PYGZhy{}mode}
+\PYG{+w}{  }\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{ess\PYGZhy{}r\PYGZhy{}command}
+\PYG{+w}{        }\PYG{l+s}{\PYGZdq{}R \PYGZhy{}\PYGZhy{}slave \PYGZhy{}\PYGZhy{}no\PYGZhy{}save \PYGZhy{}\PYGZhy{}no\PYGZhy{}restore \PYGZhy{}e \PYGZbs{}\PYGZdq{}options(repos=c(CRAN=\PYGZsq{}https://cloud.r\PYGZhy{}project.org\PYGZsq{}))\PYGZbs{}\PYGZdq{}\PYGZdq{}}\PYG{p}{))}
+\end{MintedVerbatim}

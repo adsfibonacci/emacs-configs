@@ -1,0 +1,15 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}julia\PYGZhy{}mode\PYGZhy{}hook}\PYG{+w}{ }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{eglot\PYGZhy{}ensure}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nb}{with\PYGZhy{}eval\PYGZhy{}after\PYGZhy{}load}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eglot}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}to\PYGZhy{}list}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eglot\PYGZhy{}server\PYGZhy{}programs}
+\PYG{+w}{             }\PYG{o}{\PYGZsq{}}\PYG{p}{(}\PYG{n+nv}{julia\PYGZhy{}mode}\PYG{+w}{ }\PYG{o}{.}
+\PYG{+w}{               }\PYG{p}{(}\PYG{l+s}{\PYGZdq{}julia\PYGZdq{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZhy{}\PYGZhy{}startup\PYGZhy{}file=no\PYGZdq{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZhy{}\PYGZhy{}history\PYGZhy{}file=no\PYGZdq{}}
+\PYG{+w}{                }\PYG{l+s}{\PYGZdq{}\PYGZhy{}e\PYGZdq{}}
+\PYG{+w}{                }\PYG{l+s}{\PYGZdq{}using LanguageServer, SymbolServer;}
+\PYG{l+s}{                 depot\PYGZus{}path = get(ENV, \PYGZbs{}\PYGZdq{}JULIA\PYGZus{}DEPOT\PYGZus{}PATH\PYGZbs{}\PYGZdq{}, \PYGZbs{}\PYGZdq{}\PYGZbs{}\PYGZdq{});}
+\PYG{l+s}{                 project\PYGZus{}path = Base.current\PYGZus{}project();}
+\PYG{l+s}{                 server = LanguageServer.LanguageServerInstance(}
+\PYG{l+s}{                     stdin, stdout, project\PYGZus{}path, depot\PYGZus{}path);}
+\PYG{l+s}{                 run(server);\PYGZdq{}}\PYG{p}{)))}
+\PYG{+w}{  }\PYG{p}{)}
+\end{MintedVerbatim}

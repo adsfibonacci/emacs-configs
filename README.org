@@ -346,10 +346,16 @@ In the local directories, it is able to automatically detect the proper pyrightc
     (package-install 'ein))
 
   (require 'ein)
+  (setq ein:jupyter-server-command
+        "~/.pyenv/versions/jupyter/bin/jupyter")
+  (add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:notebook-mode))
+#+end_src
+#+begin_src elisp :tangle no
+
   (setq ein:jupyter-default-server-command
       (lambda ()
         (expand-file-name "bin/jupyter" pyvenv-virtual-env)))
-  (add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:notebook-mode))
+  (add-to-list 'auto-mode-alist '("\\.ipynb\\'" . ein:notebook-mode))  
 #+end_src
 
 ** C/C++

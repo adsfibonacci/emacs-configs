@@ -1,0 +1,10 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{unless}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}installed\PYGZhy{}p}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eldoc\PYGZhy{}box}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nv}{package\PYGZhy{}install}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eldoc\PYGZhy{}box}\PYG{p}{))}
+\PYG{p}{(}\PYG{n+nb}{require}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eldoc\PYGZhy{}box}\PYG{p}{)}
+\PYG{p}{(}\PYG{n+nv}{add\PYGZhy{}hook}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eglot\PYGZhy{}managed\PYGZhy{}mode\PYGZhy{}hook}\PYG{+w}{ }\PYG{n+nf}{\PYGZsh{}\PYGZsq{}}\PYG{n+nv}{eldoc\PYGZhy{}box\PYGZhy{}hover\PYGZhy{}mode}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{eldoc\PYGZhy{}documentation\PYGZhy{}strategy}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsq{}eldoc\PYGZhy{}documentation\PYGZhy{}compose}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{eldoc\PYGZhy{}box\PYGZhy{}max\PYGZhy{}pixel\PYGZhy{}width}\PYG{+w}{ }\PYG{l+m+mi}{500}\PYG{p}{)}
+\PYG{p}{(}\PYG{k}{setq}\PYG{+w}{ }\PYG{n+nv}{eldoc\PYGZhy{}box\PYGZhy{}max\PYGZhy{}pixel\PYGZhy{}height}\PYG{+w}{ }\PYG{l+m+mi}{400}\PYG{p}{)}
+\end{MintedVerbatim}
